@@ -1,0 +1,132 @@
+version: '3.8'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: twitter_clone
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: 
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "9090:8080"
+
+
+
+
+
+
+
+
+
+
+
+
+  authentication-service:
+    build:
+      context: ./tweeter-authentication-service
+    container_name: authentication-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/twitter_clone
+      SPRING_DATASOURCE_USERNAME: app_user
+      SPRING_DATASOURCE_PASSWORD: app_password
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8081:8080"
+    depends_on:
+      - mysql
+      - kafka
+
+
+
+
+  tweet-service:
+    build:
+      context: ./tweeter-tweet-service
+    container_name: tweet-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/twitter_clone
+      SPRING_DATASOURCE_USERNAME: app_user
+      SPRING_DATASOURCE_PASSWORD: app_password
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8082:8080"
+    depends_on:
+      - mysql
+      - kafka
+
+  home-timeline-service:
+    build:
+      context: ./tweeter-home-timeline-service
+    container_name: home-timeline-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/twitter_clone
+      SPRING_DATASOURCE_USERNAME: app_user
+      SPRING_DATASOURCE_PASSWORD: app_password
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8089:8080"
+    depends_on:
+      - mysql
+      - kafka
+
+  user-timeline-service:
+    build:
+      context: ./tweeter-user-timeline-service
+    container_name: user-timeline-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/twitter_clone
+      SPRING_DATASOURCE_USERNAME: app_user
+      SPRING_DATASOURCE_PASSWORD: app_password
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8084:8080"
+    depends_on:
+      - mysql
+      - kafka
+
+
+
+
+volumes:
+  mysql_data:
+
+networks:
+  default:
+    driver: bridge
