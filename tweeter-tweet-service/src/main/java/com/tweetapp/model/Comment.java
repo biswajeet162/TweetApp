@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @Entity
-@Table(name = "tweet-comments")
+@Table(name = "tweet_comments")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

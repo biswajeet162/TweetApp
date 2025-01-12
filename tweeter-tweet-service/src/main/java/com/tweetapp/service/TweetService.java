@@ -27,7 +27,7 @@ public class TweetService {
     @Autowired
     private KafkaTemplate<String, Comment> commentKafkaTemplate;
     @Autowired
-    private KafkaTemplate<String, Like> likeKafkaTemplate;
+    private KafkaTemplate<String, TweetLikes> likeKafkaTemplate;
 
     private static final String TWEET_TOPIC = "tweet-topic";
     private static final String COMMENT_TOPIC = "comment-topic";
@@ -41,12 +41,10 @@ public class TweetService {
         tweet.setCreatedAt(LocalDateTime.now());
         tweet.setUpdatedAt(LocalDateTime.now());
         Tweet savedTweet = tweetRepository.save(tweet);
-        System.out.println("\n\n\n\n Tweet saved in service {} " + savedTweet);
 
         // Publish to Kafka
         tweetKafkaTemplate.send(TWEET_TOPIC, savedTweet);
-        System.out.println("\n\n\n\n\n\n\nTweet broadcasted also in service {} " + savedTweet);
-
+        System.out.println("\n\ntweet saved and broadcasted successfully " +  savedTweet);
         return savedTweet;
     }
 
@@ -63,7 +61,7 @@ public class TweetService {
 
 //         Publish to Kafka
         commentKafkaTemplate.send(COMMENT_TOPIC, savedComment);
-
+        System.out.println("\n\ncomment saved and broadcasted successfully " +  savedComment);
         return savedComment;
     }
 
@@ -72,14 +70,15 @@ public class TweetService {
         if (likeRepository.existsByTweetIdAndUserId(tweetId, userId)) {
             throw new RuntimeException("User already liked this tweet");
         }
-        Like like = new Like();
-        like.setTweet(tweetRepository.findById(tweetId).orElseThrow(() -> new RuntimeException("Tweet not found")));
-        like.setUserId(userId);
-        like.setCreatedAt(LocalDateTime.now());
-        Like savedLike = likeRepository.save(like);
+        TweetLikes tweetLikes = new TweetLikes();
+        tweetLikes.setTweet(tweetRepository.findById(tweetId).orElseThrow(() -> new RuntimeException("Tweet not found")));
+        tweetLikes.setUserId(userId);
+        tweetLikes.setCreatedAt(LocalDateTime.now());
+        TweetLikes savedTweetLikes = likeRepository.save(tweetLikes);
 
-        // Publish to Kafka
-        likeKafkaTemplate.send(LIKE_TOPIC, savedLike);
+//         Publish to Kafka
+        likeKafkaTemplate.send(LIKE_TOPIC, savedTweetLikes);
+        System.out.println("\n\nlike saved and broadcasted successfully " + savedTweetLikes);
     }
 
     public List<Tweet> getAllTweet() {

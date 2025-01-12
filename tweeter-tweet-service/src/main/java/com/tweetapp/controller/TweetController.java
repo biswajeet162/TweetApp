@@ -19,11 +19,10 @@ public class TweetController {
     @Autowired
     private TweetService tweetService;
 
-
     @GetMapping
-    public ResponseEntity<List<Tweet>> getTweets(@RequestBody TweetRequests tweetRequest) {
-        System.out.println("\n\n\n\n  fetch tweet in controller {} " + tweetRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(tweetService.getAllTweet());
+    public ResponseEntity<List<Tweet>> getTweets() {
+        System.out.println("\n\n\n\n  fetch tweet in controller");
+        return ResponseEntity.status(HttpStatus.OK).body(tweetService.getAllTweet());
     }
 
     @PostMapping("/create")

@@ -7,12 +7,12 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tweet-likes")
+@Table(name = "tweet_likes")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Nullable
-public class Like {
+public class TweetLikes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long likeId;
@@ -24,6 +24,24 @@ public class Like {
     private Tweet tweet;
 
     private LocalDateTime createdAt;
+
+
+
+//
+//    @Column(name = "tweet_id", nullable = false)
+//    private Long tweetId;
+//
+//    @Column(name = "user_id", nullable = false)
+//    private Long userId;
+
+
+
+
+
+
+
+
+
 
     public Long getLikeId() {
         return likeId;

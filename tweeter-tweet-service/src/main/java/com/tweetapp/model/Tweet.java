@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
-@Table(name = "tweet-tweets")
+@Table(name = "tweet_tweets")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
