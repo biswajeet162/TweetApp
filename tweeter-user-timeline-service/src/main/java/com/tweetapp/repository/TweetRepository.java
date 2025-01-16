@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface TweetRepository extends JpaRepository<Tweet, Long> {
-    @Query(value = "SELECT * FROM Tweet WHERE user_id = :userId", nativeQuery = true)
+    @Query(value = "SELECT * FROM usertimeline_tweets WHERE user_id = :userId", nativeQuery = true)
     List<Tweet> findByUserId(@Param("userId") Long userId);
 }

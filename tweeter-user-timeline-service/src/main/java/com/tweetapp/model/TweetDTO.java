@@ -3,6 +3,7 @@ package com.tweetapp.model;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -10,8 +11,8 @@ public class TweetDTO {
     private Long tweetId;
     private Long userId;
     private String content;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private Date createdAt;
+    private Date updatedAt;
     private List<CommentDTO> comments;
     private List<Long> likes; // User IDs of users who liked the tweet
 
@@ -40,19 +41,19 @@ public class TweetDTO {
         this.content = content;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 

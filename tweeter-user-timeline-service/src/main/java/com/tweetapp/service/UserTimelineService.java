@@ -7,6 +7,7 @@ import com.tweetapp.repository.TweetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,7 @@ public class UserTimelineService {
         List<Tweet> tweets = tweetRepository.findByUserId(userId);
 
         if(tweets == null){
-            throw new Exception("NOT FOUND");
+            throw new Exception("Tweet NOT FOUND");
         }
 
         // Map tweets to TweetDTOs with their comments and likes
@@ -65,7 +66,7 @@ public class UserTimelineService {
         tweetDTO.setTweetId(tweet.getTweetId());
         tweetDTO.setUserId(tweet.getUserId());
         tweetDTO.setContent(tweet.getContent());
-        tweetDTO.setCreatedAt(tweet.getCreatedAt());
+        tweetDTO.setCreatedAt(new Date());
         tweetDTO.setUpdatedAt(tweet.getUpdatedAt());
 
         tweetDTO.setComments(comments.stream().map(this::mapToCommentDTO).collect(Collectors.toList()));

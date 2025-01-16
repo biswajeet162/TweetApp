@@ -1,0 +1,49 @@
+<div class="timeline">
+  <div *ngFor="let tweet of tweets" class="tweet-card">
+    <!-- Tweet Header -->
+    <div class="tweet-header">
+      <div class="user-avatar">
+        <img [src]="'https://i.pravatar.cc/50?img=' + tweet.userId" alt="User Avatar" />
+      </div>
+      <div class="user-details">
+        <p class="user-name">{{ tweet.userName }}</p>
+        <p class="user-handle">{{ tweet.userHandle }}</p>
+        <!-- <p class="user-handle">{{ tweet.createdAt | date: 'short' }}</p> -->
+      </div>
+    </div>
+    
+    <!-- Tweet Content -->
+    <p class="tweet-content">{{ tweet.content }}</p>
+    
+    <!-- Media Section -->
+    <div class="tweet-media" *ngIf="tweet.imageUrl.length || tweet.videoUrl.length">
+      <div class="media-images">
+        <img *ngFor="let image of tweet.imageUrl" [src]="image" alt="Tweet Image" />
+      </div>
+      <div class="media-videos">
+        <video *ngFor="let video of tweet.videoUrl" [src]="video" controls></video>
+      </div>
+    </div>
+    
+    <!-- Tweet Actions -->
+    <div class="tweet-actions">
+      <button class="action-btn" (click)="likeTweet(tweet.tweetId)">
+        <i class="fa fa-heart"></i> Like ({{ tweet.likes.length }})
+      </button>
+      <button class="action-btn" (click)="toggleComments(tweet.tweetId)">
+        <i class="fa fa-comment"></i> Comments ({{ tweet.comments.length }})
+      </button>
+    </div>
+    
+    <!-- Comments Section -->
+    <div *ngIf="tweet.showComments" class="comments-section">
+      <div *ngFor="let comment of tweet.comments" class="comment">
+        <div class="comment-header">
+          <p class="comment-user">{{ comment.userHandle }}</p>
+          <p class="comment-meta">{{ comment.createdAt | date: 'short' }}</p>
+        </div>
+        <p class="comment-content">{{ comment.content }}</p>
+      </div>
+    </div>
+  </div>
+</div>

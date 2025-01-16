@@ -10,6 +10,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -38,8 +39,8 @@ public class TweetService {
         Tweet tweet = new Tweet();
         tweet.setUserId(tweetRequest.getUserId());
         tweet.setContent(tweetRequest.getContent());
-        tweet.setCreatedAt(LocalDateTime.now());
-        tweet.setUpdatedAt(LocalDateTime.now());
+        tweet.setCreatedAt(new Date());
+        tweet.setUpdatedAt(new Date());
         Tweet savedTweet = tweetRepository.save(tweet);
 
         // Publish to Kafka
@@ -55,8 +56,8 @@ public class TweetService {
         comment.setTweet(tweet);
         comment.setUserId(commentRequest.getUserId());
         comment.setContent(commentRequest.getContent());
-        comment.setCreatedAt(LocalDateTime.now());
-        comment.setUpdatedAt(LocalDateTime.now());
+        comment.setCreatedAt(new Date());
+        comment.setUpdatedAt(new Date());
         Comment savedComment = commentRepository.save(comment);
 
 //         Publish to Kafka
@@ -73,7 +74,7 @@ public class TweetService {
         TweetLikes tweetLikes = new TweetLikes();
         tweetLikes.setTweet(tweetRepository.findById(tweetId).orElseThrow(() -> new RuntimeException("Tweet not found")));
         tweetLikes.setUserId(userId);
-        tweetLikes.setCreatedAt(LocalDateTime.now());
+        tweetLikes.setCreatedAt(new Date());
         TweetLikes savedTweetLikes = likeRepository.save(tweetLikes);
 
 //         Publish to Kafka
@@ -83,5 +84,13 @@ public class TweetService {
 
     public List<Tweet> getAllTweet() {
         return tweetRepository.findAll();
+    }
+
+    public List<Comment> getAllComments() {
+        return commentRepository.findAll();
+    }
+
+    public List<TweetLikes> getAllLikes() {
+        return likeRepository.findAll();
     }
 }

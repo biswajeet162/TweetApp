@@ -7,16 +7,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
-@Table(name = "usertimeline-likes")
+@Table(name = "usertimeline_likes")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Nullable
 public class Like {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long likeId;
 
     private Long userId;
@@ -25,7 +26,7 @@ public class Like {
     @JoinColumn(name = "tweet_id", nullable = false)
     private Tweet tweet;
 
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     public Long getLikeId() {
         return likeId;
@@ -51,11 +52,11 @@ public class Like {
         this.tweet = tweet;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 }

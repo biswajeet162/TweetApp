@@ -1,0 +1,16 @@
+<div class="right-navbar">
+    <h3 class="navbar-title">Who to follow</h3>
+    <div class="user-card" *ngFor="let user of users">
+      <img
+        class="user-profile-pic"
+        [src]="user.userProfilePic"
+        alt="Profile picture of {{ user.userName }}"
+      />
+      <div class="user-info">
+        <p class="user-name">{{ user.userName }}</p>
+        <p class="user-handle">{{ user.userHandle }}</p>
+      </div>
+      <button class="follow-btn">Follow</button>
+    </div>
+  </div>
+  

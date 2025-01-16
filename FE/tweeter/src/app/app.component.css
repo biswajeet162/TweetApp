@@ -1,0 +1,95 @@
+/* Main Container */
+.main-container {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    height: 100vh;
+    overflow-x: hidden;
+    padding: 0 2%; /* Adjust padding for space between the sections */
+  }
+  
+  /* Blank Space (Space between left navbar and the edge of the screen) */
+  .blank-space {
+    width: 5%; /* 5% space from left */
+    height: 100vh;
+    overflow-y: auto;
+    background-color: #ffffff;
+    padding: 15px;
+    position: sticky;
+    top: 0;
+  }
+  
+  /* Left Navbar Styling */
+  .left-navbar {
+    width: 22%; /* 22% width for left navbar */
+    height: 100vh;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    padding: 5px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+  }
+  
+  /* Main Content Area */
+  .center-content {
+    width: 45%; /* 45% width for center content */
+    height: 100vh;
+    overflow-y: auto;
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin-left: 1%; /* 1% space between left navbar and main content */
+    margin-right: 1%; /* 1% space between right navbar and main content */
+    padding: 20px;
+  }
+  
+  /* Right Navbar Styling */
+  .right-navbar {
+    width: 27%; /* 27% width for right navbar */
+    height: 100vh;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    padding: 15px;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+  }
+  
+  /* Additional Styling for Body (Ensure layout covers full height) */
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  
+  /* Remove Scrollbar Icon */
+  .left-navbar, .center-content, .right-navbar {
+    overflow-y: scroll; /* Keeps the content scrollable */
+    -ms-overflow-style: none;  /* Hide scrollbar for Internet Explorer */
+    scrollbar-width: none;  /* Hide scrollbar for Firefox */
+  }
+  
+  .left-navbar::-webkit-scrollbar, .center-content::-webkit-scrollbar, .right-navbar::-webkit-scrollbar {
+    display: none; /* Hide scrollbar in Webkit browsers (Chrome, Safari) */
+  }
+  
+  /* Responsive Styles for Mobile */
+  @media screen and (max-width: 768px) {
+    .main-container {
+      flex-direction: column; /* Stack items vertically on small screens */
+      padding: 0 10px;
+    }
+  
+    .left-navbar, .right-navbar {
+      display: none; /* Hide left and right navbars on mobile */
+    }
+  
+    .center-content {
+      width: 100%; /* Full width for center content */
+      margin-left: 0;
+      margin-right: 0;
+      height: auto; /* Adjust height to fit content */
+      padding: 18px; /* Reduce padding for mobile */
+    }
+  }
+  

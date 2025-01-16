@@ -1,10 +1,12 @@
 package com.tweetapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "tweet_likes")
@@ -21,26 +23,10 @@ public class TweetLikes {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tweet_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Tweet tweet;
 
-    private LocalDateTime createdAt;
-
-
-
-//
-//    @Column(name = "tweet_id", nullable = false)
-//    private Long tweetId;
-//
-//    @Column(name = "user_id", nullable = false)
-//    private Long userId;
-
-
-
-
-
-
-
-
+    private Date createdAt;
 
 
     public Long getLikeId() {
@@ -67,11 +53,11 @@ public class TweetLikes {
         this.tweet = tweet;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 }

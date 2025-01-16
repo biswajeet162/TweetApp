@@ -1,0 +1,68 @@
+<div class="user-timeline">
+    <!-- User Profile Section -->
+    <div class="user-profile">
+      <div class="profile-header">
+        <img class="profile-image" src="https://i.pravatar.cc/150?img=10" alt="User Profile Picture" />
+        <div class="profile-details">
+          <h2 class="user-name">John Doe</h2>
+          <p class="user-handle">johndoe</p>
+          <p class="user-bio">Love coding, coffee, and exploring the world 🌍 | Full-Stack Developer</p>
+        </div>
+      </div>
+      <div class="profile-stats">
+        <div class="stat-item">
+          <p class="stat-number">150</p>
+          <p class="stat-label">Tweets</p>
+        </div>
+        <div class="stat-item">
+          <p class="stat-number">1.2K</p>
+          <p class="stat-label">Followers</p>
+        </div>
+        <div class="stat-item">
+          <p class="stat-number">200</p>
+          <p class="stat-label">Following</p>
+        </div>
+      </div>
+    </div>
+  
+    <!-- User Tweets Section -->
+    <div class="user-tweets">
+      <h3 class="section-title">Recent Tweets of John Doe</h3>
+      <div class="tweet-card" *ngFor="let tweet of tweets">
+        <!-- Tweet Content -->
+        <p class="tweet-content">{{ tweet.content }}</p>
+  
+        <!-- Media Section -->
+        <div class="tweet-media">
+          <div class="media-images" *ngIf="tweet.imageUrl.length">
+            <img *ngFor="let image of tweet.imageUrl" [src]="image" alt="Tweet Image" />
+          </div>
+          <div class="media-videos" *ngIf="tweet.videoUrl.length">
+            <video *ngFor="let video of tweet.videoUrl" [src]="video" controls></video>
+          </div>
+        </div>
+  
+        <!-- Tweet Actions -->
+        <div class="tweet-actions">
+          <button class="action-btn" (click)="likeTweet(tweet.tweetId)">
+            <i class="fa fa-heart"></i> Like ({{ tweet.likes.length }})
+          </button>
+          <button class="action-btn" (click)="toggleComments(tweet.tweetId)">
+            <i class="fa fa-comment"></i> Comments ({{ tweet.comments.length }})
+          </button>
+        </div>
+  
+        <!-- Comments Section -->
+        <div class="comments-section" *ngIf="tweet.showComments">
+          <div class="comment" *ngFor="let comment of tweet.comments">
+            <div class="comment-header">
+              <p class="comment-user">{{ comment.userHandle }}</p>
+              <p class="comment-meta">{{ comment.createdAt | date: 'short' }}</p>
+            </div>
+            <p class="comment-content">{{ comment.content }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

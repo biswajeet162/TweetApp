@@ -19,11 +19,13 @@ public class UserTimelineController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<List<TweetDTO>> getUserTweets(@PathVariable Long userId) throws Exception {
+        System.out.println("\n\nUserId - fetch all user time line tweets with comments and likes");
         return ResponseEntity.ok(userTimelineService.getUserTweets(userId));
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<TweetDTO>> searchUserTweets(@RequestParam String username) throws Exception {
+        System.out.println("\n\nUsername - fetch all user time line tweets with comments and likes");
         return ResponseEntity.ok(userTimelineService.searchTweetsByUsername(username));
     }
 }

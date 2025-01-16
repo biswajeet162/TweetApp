@@ -2,6 +2,13 @@ version: '3.8'
 
 # docker stop $(docker ps -q) && docker rm $(docker ps -aq) && docker rmi $(docker images -q) && docker volume prune -f && docker network prune -f
 
+# bin/zookeeper-server-start.sh config/zookeeper.properties
+# bin/kafka-server-start.sh config/server.properties
+
+# show list of TOPICS
+# bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+
+
 
 
 services:
@@ -58,91 +65,91 @@ services:
     networks:
       - app-network
 
-  # mysql:
-  #   image: mysql:8
-  #   container_name: mysql-container
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: password
-  #     MYSQL_DATABASE: demo
-  #   ports:
-  #     - "3306:3306"
-  #   networks:
-  #     - app-network
-  #   healthcheck:
-  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 5
+  mysql:
+    image: mysql:8
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: demo
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # phpmyadmin:
-  #   image: phpmyadmin/phpmyadmin:latest
-  #   container_name: phpmyadmin
-  #   depends_on:
-  #     mysql:
-  #       condition: service_healthy
-  #   environment:
-  #     PMA_HOST: mysql
-  #     PMA_PORT: 3306
-  #   ports:
-  #     - "3307:80"
-  #   networks:
-  #     - app-network
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    ports:
+      - "3307:80"
+    networks:
+      - app-network
 
-  # auth-app:
-  #   build:
-  #     context: .././tweeter-authentication-service
-  #   container_name: auth-service-app
-  #   depends_on:
-  #     mysql:
-  #       condition: service_healthy
-  #     kafka:
-  #       condition: service_healthy
-  #   ports:
-  #     - "8081:8080"
-  #   networks:
-  #     - app-network
+  auth-app:
+    build:
+      context: .././tweeter-authentication-service
+    container_name: auth-service-app
+    depends_on:
+      mysql:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8081:8080"
+    networks:
+      - app-network
 
-  # tweet-app:
-  #   build:
-  #     context: .././tweeter-tweet-service
-  #   container_name: tweet-service-app
-  #   depends_on:
-  #     mysql:
-  #       condition: service_healthy
-  #     kafka:
-  #       condition: service_healthy
-  #   ports:
-  #     - "8082:8080"
-  #   networks:
-  #     - app-network
+  tweet-app:
+    build:
+      context: .././tweeter-tweet-service
+    container_name: tweet-service-app
+    depends_on:
+      mysql:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8082:8080"
+    networks:
+      - app-network
 
-  # hometimeline-app:
-  #   build:
-  #     context: .././tweeter-home-timeline-service
-  #   container_name: hometimeline-service-app
-  #   depends_on:
-  #     mysql:
-  #       condition: service_healthy
-  #     kafka:
-  #       condition: service_healthy
-  #   ports:
-  #     - "8083:8080"
-  #   networks:
-  #     - app-network
+  hometimeline-app:
+    build:
+      context: .././tweeter-home-timeline-service
+    container_name: hometimeline-service-app
+    depends_on:
+      mysql:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8083:8080"
+    networks:
+      - app-network
 
-  # usertimeline-app:
-  #   build:
-  #     context: .././tweeter-user-timeline-service
-  #   container_name: usertimeline-service-app
-  #   depends_on:
-  #     mysql:
-  #       condition: service_healthy
-  #     kafka:
-  #       condition: service_healthy
-  #   ports:
-  #     - "8084:8080"
-  #   networks:
-  #     - app-network
+  usertimeline-app:
+    build:
+      context: .././tweeter-user-timeline-service
+    container_name: usertimeline-service-app
+    depends_on:
+      mysql:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8084:8080"
+    networks:
+      - app-network
 
 networks:
   app-network:

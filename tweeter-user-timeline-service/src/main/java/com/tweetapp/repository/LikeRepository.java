@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface LikeRepository extends JpaRepository<Like, Long> {
-    @Query(value = "SELECT * FROM likes WHERE tweet_id = :tweetId", nativeQuery = true)
+    @Query(value = "SELECT * FROM usertimeline_likes WHERE tweet_id = :tweetId", nativeQuery = true)
     List<Like> findByTweetId(Long tweetId);
 }

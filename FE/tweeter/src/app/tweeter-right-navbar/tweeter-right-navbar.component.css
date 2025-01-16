@@ -1,0 +1,83 @@
+/* Right Navbar Styling */
+.right-navbar {
+    width: 300px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  
+  .navbar-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+  }
+  
+  .user-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #e3e3e3;
+    border-radius: 8px;
+    background-color: #fff;
+  }
+  
+  .user-profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+  }
+  
+  .user-info {
+    flex: 1;
+  }
+  
+  .user-name {
+    margin: 0;
+    font-weight: bold;
+  }
+  
+  .user-handle {
+    margin: 5px 0 0;
+    font-size: 0.9em;
+    color: #888;
+  }
+  
+  .follow-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    cursor: pointer;
+  }
+  
+  .follow-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  @media screen and (max-width: 600px) {
+    .right-navbar {
+      width: 100%;
+      padding: 10px;
+    }
+  
+    .user-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .follow-btn {
+      width: 100%;
+      margin-top: 10px;
+    }
+  }
+  

@@ -5,18 +5,19 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Setter
 @Getter
 @Entity
-@Table(name = "usertimeline-comments")
+@Table(name = "usertimeline_comments")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Nullable
 public class Comment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
     private Long userId;
@@ -26,8 +27,8 @@ public class Comment {
     @JoinColumn(name = "tweet_id", nullable = false)
     private Tweet tweet;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private Date createdAt;
+    private Date updatedAt;
 
 
     public Long getCommentId() {
@@ -62,19 +63,19 @@ public class Comment {
         this.tweet = tweet;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 }
