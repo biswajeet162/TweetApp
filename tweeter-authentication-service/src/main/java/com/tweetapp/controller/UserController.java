@@ -17,11 +17,11 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @Autowired
-    private KafkaTemplate<String, String> tweetKafkaTemplate;
-
-    @Autowired
-    private KafkaTemplate<String, User> userKafkaTemplate;
+//    @Autowired
+//    private KafkaTemplate<String, String> tweetKafkaTemplate;
+//
+//    @Autowired
+//    private KafkaTemplate<String, User> userKafkaTemplate;
 
 
 
@@ -36,7 +36,7 @@ public class UserController {
 
     @GetMapping( value = "/kafka")
     public String getAllUserssskkk() {
-        tweetKafkaTemplate.send("topic", new User().toString());
+//        tweetKafkaTemplate.send("topic", new User().toString());
 
         return "send messahe-----------------------";
     }
@@ -47,7 +47,7 @@ public class UserController {
         User user = new User();
         user.setId(34L);
         user.setName("HElloooooOOOOOOOO");
-        userKafkaTemplate.send("topic", user);
+//        userKafkaTemplate.send("topic", user);
 
 
         System.out.println("message send-----------------------" + user.toString());
@@ -65,7 +65,7 @@ public class UserController {
     @PostMapping
     public User createUser(@RequestBody User user) {
         User savedUser = userRepository.save(user);
-        tweetKafkaTemplate.send("topic", savedUser.toString());
+//        tweetKafkaTemplate.send("topic", savedUser.toString());
 
         return savedUser;
 
