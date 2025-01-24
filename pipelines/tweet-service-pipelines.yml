@@ -53,8 +53,7 @@ stages:
         displayName: Install Docker CLI on Agent
         steps:
           - script: |
-              echo "Installing Docker CLI..."
-              choco install docker-cli -y  # For Windows - installs only the CLI
+              echo "Installing Docker CLI..--------------------------------------------------."
               docker --version
             displayName: Install Docker CLI (if not already installed)
 
