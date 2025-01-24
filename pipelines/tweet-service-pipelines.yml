@@ -52,9 +52,17 @@ stages:
               java -version
             displayName: Set up Java 17
 
-          # Step 3: Build the application with Maven
+          # Step 3: Verify Maven setup
+          - script: |
+              echo "Checking Maven setup...------------------------------"
+              mvn -version
+              echo "PATH: $PATH"
+            displayName: Verify Maven Setup
+
+          # Step 4: Build the application with Maven
           - script: |
               echo "Building the application..."
+              echo $pwd
               cd ..
               cd tweeter-authentication-service
               mvn clean package -DskipTests
