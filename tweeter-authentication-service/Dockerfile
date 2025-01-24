@@ -65,7 +65,7 @@ FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 
 # Copy the Spring Boot JAR file
-COPY target/tweeter-auth-service-*.jar app.jar
+COPY target/tweeter-authentication-service-*.jar app.jar
 
 # Expose the application port
 EXPOSE 8080
