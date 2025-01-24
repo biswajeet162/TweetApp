@@ -25,14 +25,10 @@
 
 
 
-
-
-
-
 trigger:
   branches:
     include:
-      - master  # Trigger on changes to the main branch
+      - master  # Trigger on changes to the master branch
 
 pool:
   name: 'MyAgent'
@@ -45,14 +41,53 @@ stages:
         displayName: Build Auth Service
         steps:
           # Step 1: Checkout code
-          - task: Checkout@1
+          - checkout: self
             displayName: Checkout Code
 
-          # Step 2: Set up JDK
-          - task: UseJavaVersion@1
-            inputs:
-              version: '17'  # Use Java 11 (adjust as per your project's requirements)
-              architecture: 'x64'
+          # Step 2: Set up JDK manually (if UseJavaVersion is unavailable)
+          - script: |
+              echo "Setting up Java 17..."
+              export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+              export PATH=$JAVA_HOME/bin:$PATH
+              java -version
+            displayName: Set up Java 17
+
+          # Step 3: Build the application with Maven
+          - script: |
+              echo "Building the application..."
+              mvn clean package -DskipTests
+            displayName: Build Spring Boot Application
+
+
+
+
+
+
+
+# trigger:
+#   branches:
+#     include:
+#       - master  # Trigger on changes to the main branch
+
+# pool:
+#   name: 'MyAgent'
+
+# stages:
+#   - stage: Build
+#     displayName: Build Auth Service
+#     jobs:
+#       - job: BuildAuthService
+#         displayName: Build Auth Service
+#         steps:
+#           # Step 1: Checkout code
+#           - task: Checkout@1
+#             displayName: Checkout Code
+
+#           # Step 2: Set up JDK
+#           - task: UseJavaVersion@1
+#             inputs:
+#               version: '17'  # Use Java 11 (adjust as per your project's requirements)
+#               architecture: 'x64'
 
           # # Step 3: Build the Auth Service using Maven
           # - script: |
