@@ -1,51 +1,47 @@
-# trigger:
-#   branches:
-#     include:
-#       - master  # Trigger on changes to the master branch
+trigger:
+  branches:
+    include:
+      - master  # Trigger on changes to the master branch
 
-# pool:
-#   name: 'MyAgent'
+pool:
+  name: 'MyAgent'
 
-# # variables:
-# #   dockerRegistryServiceConnection: 'biswaDockerRegistryConnection'
+stages:
+  - stage: Build
+    displayName: Build Auth Service
+    jobs:
+      - job: BuildAuthService
+        displayName: Build Auth Service
+        steps:
+          # Step 1: Checkout code
+          - checkout: self
+            displayName: Checkout Code
 
+          # Step 2: Set up JDK manually
+          - script: |
+              echo "Setting up Java 17..."
+              set JAVA_HOME=C:\Program Files\Java\jdk-17
+              set PATH=%JAVA_HOME%\bin;%PATH%
+              echo JAVA_HOME: %JAVA_HOME%
+              echo PATH: %PATH%
+              java -version
+            displayName: Set up Java 17
 
-# stages:
-#   - stage: Build
-#     displayName: Build Auth Service
-#     jobs:
-#       - job: BuildAuthService
-#         displayName: Build Auth Service
-#         steps:
-#           # Step 1: Checkout code
-#           - checkout: self
-#             displayName: Checkout Code
+          # Step 3: Verify Maven setup
+          - script: |
+              echo "Checking Maven setup..."
+              mvn -version
+              echo PATH: %PATH%
+            displayName: Verify Maven Setup
 
-#           # Step 2: Set up JDK manually
-#           - script: |
-#               echo "Setting up Java 17..."
-#               set JAVA_HOME=C:\Program Files\Java\jdk-17
-#               set PATH=%JAVA_HOME%\bin;%PATH%
-#               echo JAVA_HOME: %JAVA_HOME%
-#               echo PATH: %PATH%
-#               java -version
-#             displayName: Set up Java 17
-
-#           # Step 3: Verify Maven setup
-#           - script: |
-#               echo "Checking Maven setup..."
-#               mvn -version
-#               echo PATH: %PATH%
-#             displayName: Verify Maven Setup
-
-#           # Step 4: Build the application with Maven
-#           - script: |
-#               echo "Building the application..."
-#               echo Current Directory: %cd%
-#               cd "$(Build.SourcesDirectory)\tweeter-authentication-service"
-#               echo Now in Directory: %cd%
-#               mvn clean package -DskipTests
-#             displayName: Build Spring Boot Application
+          # Step 4: Build the application with Maven
+          - script: |
+              echo "Building the application..."
+              echo Current Directory: %cd%
+              cd "$(Build.SourcesDirectory)\tweeter-authentication-service"
+              echo Now in Directory: %cd%
+              mvn clean package -DskipTests
+            displayName: Build Spring Boot Application
 
 
 
@@ -91,94 +87,3 @@
           #     Dockerfile: auth-service/Dockerfile
           #     tags: |
           #       auth-service:$(Build.BuildId)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-trigger:
-  branches:
-    include:
-      - master  # Trigger on changes to the master branch
-
-pool:
-  name: 'MyAgent'
-
-variables:
-  dockerRegistryServiceConnection: 'biswaDockerRegistryConnection'  # Replace with your actual service connection name
-
-stages:
-  - stage: BuildApp
-    displayName: Build Application
-    jobs:
-      - job: BuildSpringBoot
-        displayName: Build Spring Boot Application
-        steps:
-          - checkout: self
-            displayName: Checkout Code
-          - script: |
-              echo "Setting up Java 17..."
-              set JAVA_HOME=C:\Program Files\Java\jdk-17
-              set PATH=%JAVA_HOME%\bin;%PATH%
-              java -version
-            displayName: Set up Java 17
-          - script: |
-              echo "Building the application..."
-              cd "$(Build.SourcesDirectory)\tweeter-auth-service"
-              mvn clean package -DskipTests
-            displayName: Build Spring Boot Application
-
-  - stage: Dockerize
-    displayName: Build Docker Image
-    dependsOn: BuildApp
-    jobs:
-      - job: BuildDockerImage
-        displayName: Build Docker Image
-        steps:
-          - task: Docker@2
-            displayName: Build Docker Image
-            inputs:
-              containerRegistry: $(dockerRegistryServiceConnection)
-              repository: 'tweeter-auth-service'
-              command: 'build'
-              Dockerfile: '$(Build.SourcesDirectory)/tweeter-auth-service/Dockerfile'
-              tags: |
-                latest
-                $(Build.BuildId)
-
-  - stage: PushDockerImage
-    displayName: Push Docker Image
-    dependsOn: Dockerize
-    jobs:
-      - job: PushDocker
-        displayName: Push Docker Image
-        steps:
-          - task: Docker@2
-            displayName: Push Docker Image
-            inputs:
-              containerRegistry: $(dockerRegistryServiceConnection)
-              repository: 'tweeter-auth-service'
-              command: 'push'
-              tags: |
-                latest
-                $(Build.BuildId)
-
