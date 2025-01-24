@@ -49,7 +49,7 @@ stages:
 
   - stage: Dockerize
     displayName: Build Docker Image
-    dependsOn: BuildApp
+    dependsOn: Build
     jobs:
       - job: BuildDockerImage
         displayName: Build Docker Image
