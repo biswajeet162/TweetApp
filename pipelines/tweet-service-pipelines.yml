@@ -4,17 +4,68 @@
 # https://aka.ms/yaml
 
 
+# trigger:
+# - master
+
+# pool:
+#   name: 'MyAgent'
+
+# steps:
+# - script: echo Hello, world!
+#   displayName: 'Run a one-line script'
+
+# - script: |
+#     echo Add other tasks to build, test, and deploy your project.
+#     echo See https://aka.ms/yaml
+#   displayName: 'Run a multi-line script'
+
+
+
+
+
+
+
+
+
+
+
 trigger:
-- master
+  branches:
+    include:
+      - master  # Trigger on changes to the main branch
 
 pool:
   name: 'MyAgent'
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+stages:
+  - stage: Build
+    displayName: Build Auth Service
+    jobs:
+      - job: BuildAuthService
+        displayName: Build Auth Service
+        steps:
+          # Step 1: Checkout code
+          - task: Checkout@1
+            displayName: Checkout Code
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+          # Step 2: Set up JDK
+          - task: UseJavaVersion@1
+            inputs:
+              version: '11'  # Use Java 11 (adjust as per your project's requirements)
+              architecture: 'x64'
+
+          # Step 3: Build the Auth Service using Maven
+          - script: |
+              cd ..
+              cd tweeter-authentication-service
+              mvn clean install
+            displayName: Build with Maven
+
+          # # Step 4: Build Docker image (Optional, if Docker is used)
+          # - task: Docker@2
+          #   displayName: Build Docker Image
+          #   inputs:
+          #     command: build
+          #     Dockerfile: auth-service/Dockerfile
+          #     tags: |
+          #       auth-service:$(Build.BuildId)
