@@ -1,10 +1,10 @@
 trigger:
   branches:
     include:
-      - main  # Trigger on changes to the main branch
+      - master  # Trigger on changes to the main branch
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: 'MyAgent'
 
 stages:
   - stage: Build
