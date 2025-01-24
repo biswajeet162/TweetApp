@@ -55,6 +55,8 @@ stages:
           # Step 3: Build the application with Maven
           - script: |
               echo "Building the application..."
+              cd ..
+              cd tweeter-authentication-service
               mvn clean package -DskipTests
             displayName: Build Spring Boot Application
 
@@ -89,12 +91,12 @@ stages:
 #               version: '17'  # Use Java 11 (adjust as per your project's requirements)
 #               architecture: 'x64'
 
-          # # Step 3: Build the Auth Service using Maven
-          # - script: |
-          #     cd ..
-          #     cd tweeter-authentication-service
-          #     mvn clean install
-          #   displayName: Build with Maven
+#           # Step 3: Build the Auth Service using Maven
+#           - script: |
+#               cd ..
+#               cd tweeter-authentication-service
+#               mvn clean install
+#             displayName: Build with Maven
 
           # # Step 4: Build Docker image (Optional, if Docker is used)
           # - task: Docker@2
