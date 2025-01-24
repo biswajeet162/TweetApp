@@ -6,6 +6,10 @@ trigger:
 pool:
   name: 'MyAgent'
 
+variables:
+  dockerRegistryServiceConnection: 'biswaDockerRegistryConnection'  # Replace with your actual service connection name
+
+
 stages:
   - stage: Build
     displayName: Build Auth Service
@@ -43,6 +47,40 @@ stages:
               mvn clean package -DskipTests
             displayName: Build Spring Boot Application
 
+  - stage: Dockerize
+    displayName: Build Docker Image
+    dependsOn: BuildApp
+    jobs:
+      - job: BuildDockerImage
+        displayName: Build Docker Image
+        steps:
+          - task: Docker@2
+            displayName: Build Docker Image
+            inputs:
+              containerRegistry: $(dockerRegistryServiceConnection)
+              repository: 'tweeter-auth-service'
+              command: 'build'
+              Dockerfile: '$(Build.SourcesDirectory)/tweeter-auth-service/Dockerfile'
+              tags: |
+                latest
+                $(Build.BuildId)
+
+  - stage: PushDockerImage
+    displayName: Push Docker Image
+    dependsOn: Dockerize
+    jobs:
+      - job: PushDocker
+        displayName: Push Docker Image
+        steps:
+          - task: Docker@2
+            displayName: Push Docker Image
+            inputs:
+              containerRegistry: $(dockerRegistryServiceConnection)
+              repository: 'tweeter-auth-service'
+              command: 'push'
+              tags: |
+                latest
+                $(Build.BuildId)
 
 
 
