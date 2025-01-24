@@ -32,7 +32,7 @@
   .user-name {
     font-weight: bold;
     font-size: 16px;
-    color: #1d9bf0; /* Twitter Blue */
+    color: #017acb; /* Twitter Blue */
   }
   
   .user-handle {
@@ -55,7 +55,7 @@
   .nav-link {
     text-decoration: none;
     font-size: 16px;
-    color: #1d9bf0; /* Twitter Blue */
+    color: #0464a4; /* Twitter Blue */
     display: flex;
     align-items: center;
     padding: 10px;
