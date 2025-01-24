@@ -58,9 +58,9 @@ stages:
             displayName: Build Docker Image
             inputs:
               containerRegistry: $(dockerRegistryServiceConnection)
-              repository: 'tweeter-auth-service'
+              repository: 'tweeter-authentication-service'
               command: 'build'
-              Dockerfile: '$(Build.SourcesDirectory)/tweeter-auth-service/Dockerfile'
+              Dockerfile: '$(Build.SourcesDirectory)/tweeter-authentication-service/Dockerfile'
               tags: |
                 latest
                 $(Build.BuildId)
@@ -76,7 +76,7 @@ stages:
             displayName: Push Docker Image
             inputs:
               containerRegistry: $(dockerRegistryServiceConnection)
-              repository: 'tweeter-auth-service'
+              repository: 'tweeter-authentication-service'
               command: 'push'
               tags: |
                 latest
