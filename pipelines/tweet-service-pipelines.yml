@@ -69,7 +69,8 @@ stages:
               cf --version || (
                 echo "Cloud Foundry CLI not found. Installing..."
                 curl -L "https://github.com/cloudfoundry/cli/releases/download/v7.3.0/cloudfoundry-cli_7.3.0_windows_x86_64.zip" -o cf-cli.zip
-                unzip cf-cli.zip -d cf-cli
+                # Using PowerShell to extract the ZIP file
+                powershell -Command "Expand-Archive -Path cf-cli.zip -DestinationPath cf-cli"
                 move cf-cli\cf.exe C:\Windows\System32\
                 echo "Cloud Foundry CLI installed."
               )
@@ -109,7 +110,7 @@ stages:
           # Log in to Cloud Foundry
           - script: |
               echo "Logging into Cloud Foundry..."
-              cf login -a https://api.de.a9s.eu -u biswajeet155@gmail.com -p mypass@123
+              cf login -a https://api.de.a9s.eu -u biswajeet162@gmail.com -p 162@Biswa
             displayName: Cloud Foundry Login
 
           # Deploy the Docker image to Cloud Foundry
@@ -117,7 +118,6 @@ stages:
               echo "Deploying the Docker image to Cloud Foundry..."
               cf push tweeter-authentication-service-test --docker-image $(Build.Repository.Name):$(Build.BuildId) --random-route --no-start --env SPRING_PROFILES_ACTIVE=test
             displayName: Push Docker Image to Cloud Foundry
-
 
 
 
