@@ -3,8 +3,8 @@
 parameters:
   environment: ''  # The target environment (dev, integration, production)
 
-variables:
-  dockerRegistryServiceConnection: 'biswaDockerRegistryConnection'  # Replace with your actual service connection name
+# variables:
+#   dockerRegistryServiceConnection: 'biswaDockerRegistryConnection'  # Replace with your actual service connection name
 
 stages:
   - stage: Dockerize
