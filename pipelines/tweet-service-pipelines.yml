@@ -1,7 +1,7 @@
 trigger:
   branches:
     include:
-      - master  # Trigger on changes to the master branch
+      - main  # Trigger on changes to the master branch
 
 pool:
   name: 'MyAgent'
