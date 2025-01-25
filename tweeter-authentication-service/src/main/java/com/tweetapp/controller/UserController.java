@@ -24,6 +24,10 @@ public class UserController {
 //    private KafkaTemplate<String, User> userKafkaTemplate;
 
 
+    @GetMapping( value = "/hii")
+    public String getAllUserssdds() {
+        return "hiiiiiii";
+    }
 
 
     @GetMapping( value = "/hi")

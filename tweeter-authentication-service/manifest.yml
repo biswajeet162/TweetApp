@@ -1,0 +1,19 @@
+---
+applications:
+  - name: tweeter-authentication-service-test          # Name of the app
+    memory: 1024M                 # Memory allocated to the app
+    instances: 1                 # Number of instances to run (adjust as needed)
+    path: target/tweeter-authentication-service-0.0.1-SNAPSHOT.jar # Path to your JAR file
+    buildpacks:
+      - java_buildpack           # Using the Java buildpack
+    env:
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+ } }'
+      SPRING_PROFILES_ACTIVE: test # Set the active Spring profile (if needed)
+      JAVA_OPTS: "-Xmx300m -Xms300m -XX:MaxMetaspaceSize=100m -XX:ReservedCodeCacheSize=30m -Xss512k"
+
+
+
+
+
+
+#  cf login -a https://api.de.a9s.eu
