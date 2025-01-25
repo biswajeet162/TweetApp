@@ -1,13 +1,15 @@
 trigger:
   branches:
     include:
-      - main  # Trigger on changes to the master branch
+      - master  # Trigger on changes to the master branch
 
 pool:
   name: 'MyAgent'
 
 variables:
   dockerRegistryServiceConnection: 'biswaDockerRegistryConnection'  # Replace with your actual service connection name
+  dockerImageName: 'tweeter-authentication-service'
+  dockerImageTag: '$(Build.BuildId)'  # Example of using the Build ID for tagging the image
 
 stages:
   - stage: Build
@@ -74,29 +76,163 @@ stages:
             displayName: Build Docker Image
             inputs:
               containerRegistry: $(dockerRegistryServiceConnection)
-              repository: 'tweeter-authentication-service'
+              repository: '$(dockerImageName)'
               command: 'build'
               Dockerfile: '$(Build.SourcesDirectory)/tweeter-authentication-service/Dockerfile'
               tags: |
                 latest
-                $(Build.BuildId)
+                $(dockerImageTag)
 
-  - stage: PushDockerImage
-    displayName: Push Docker Image
+  - stage: DeployToCloudFoundry
+    displayName: Deploy to Cloud Foundry
     dependsOn: Dockerize
     jobs:
-      - job: PushDocker
-        displayName: Push Docker Image
+      - job: DeployDockerToCF
+        displayName: Deploy Docker Image to Cloud Foundry
         steps:
-          - task: Docker@2
-            displayName: Push Docker Image
-            inputs:
-              containerRegistry: $(dockerRegistryServiceConnection)
-              repository: 'tweeter-authentication-service'
-              command: 'push'
-              tags: |
-                latest
-                $(Build.BuildId)
+          - script: |
+              echo "Logging into Cloud Foundry..."
+              cf login -a https://api.de.a9s.eu -u biswajeet155@gmail.com -p mypass@123
+
+              echo "Pushing the Docker image to Cloud Foundry..."
+              cf push tweeter-authentication-service-test \
+                --docker-image $(dockerImageName):$(dockerImageTag) \
+                --random-route \
+                --no-start \
+                --env SPRING_PROFILES_ACTIVE=test \
+                --env JAVA_OPTS="-Xmx300m -Xms300m -XX:MaxMetaspaceSize=100m -XX:ReservedCodeCacheSize=30m -Xss512k"
+
+              # Start the application after pushing it
+              cf start tweeter-authentication-service-test
+            displayName: Deploy Docker Image to Cloud Foundry
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 2nd working
+# trigger:
+#   branches:
+#     include:
+#       - master  # Trigger on changes to the master branch
+
+# pool:
+#   name: 'MyAgent'
+
+# variables:
+#   dockerRegistryServiceConnection: 'biswaDockerRegistryConnection'  # Replace with your actual service connection name
+
+# stages:
+#   - stage: Build
+#     displayName: Build Auth Service
+#     jobs:
+#       - job: BuildAuthService
+#         displayName: Build Auth Service
+#         steps:
+#           # Step 1: Checkout code
+#           - checkout: self
+#             displayName: Checkout Code
+
+#           # Step 2: Set up JDK manually
+#           - script: |
+#               echo "Setting up Java 17..."
+#               set JAVA_HOME=C:\Program Files\Java\jdk-17
+#               set PATH=%JAVA_HOME%\bin;%PATH%
+#               echo JAVA_HOME: %JAVA_HOME%
+#               echo PATH: %PATH%
+#               java -version
+#             displayName: Set up Java 17
+
+#           # Step 3: Verify Maven setup
+#           - script: |
+#               echo "Checking Maven setup..."
+#               mvn -version
+#               echo PATH: %PATH%
+#             displayName: Verify Maven Setup
+
+#           # Step 4: Build the application with Maven
+#           - script: |
+#               echo "Building the application..."
+#               echo Current Directory: %cd%
+#               cd "$(Build.SourcesDirectory)\tweeter-authentication-service"
+#               echo Now in Directory: %cd%
+#               mvn clean package -DskipTests
+#             displayName: Build Spring Boot Application
+
+#   - stage: InstallDocker
+#     displayName: Install Docker CLI
+#     jobs:
+#       - job: InstallDockerCLI
+#         displayName: Install Docker CLI on Agent
+#         steps:
+#           - script: |
+#               echo "Installing Docker CLI..--------------------------------------------------."
+#               docker --version
+#             displayName: Install Docker CLI (if not already installed)
+
+#   - stage: Dockerize
+#     displayName: Build Docker Image
+#     dependsOn: Build
+#     jobs:
+#       - job: BuildDockerImage
+#         displayName: Build Docker Image
+#         steps:
+#           # Ensure Docker is installed before running Docker commands
+#           - script: |
+#               echo "Checking Docker installation..."
+#               docker --version
+#             displayName: Verify Docker Installation
+
+#           - task: Docker@2
+#             displayName: Build Docker Image
+#             inputs:
+#               containerRegistry: $(dockerRegistryServiceConnection)
+#               repository: 'tweeter-authentication-service'
+#               command: 'build'
+#               Dockerfile: '$(Build.SourcesDirectory)/tweeter-authentication-service/Dockerfile'
+#               tags: |
+#                 latest
+#                 $(Build.BuildId)
+
+#   - stage: PushDockerImage
+#     displayName: Push Docker Image
+#     dependsOn: Dockerize
+#     jobs:
+#       - job: PushDocker
+#         displayName: Push Docker Image
+#         steps:
+#           - task: Docker@2
+#             displayName: Push Docker Image
+#             inputs:
+#               containerRegistry: $(dockerRegistryServiceConnection)
+#               repository: 'tweeter-authentication-service'
+#               command: 'push'
+#               tags: |
+#                 latest
+#                 $(Build.BuildId)
 
 
 
