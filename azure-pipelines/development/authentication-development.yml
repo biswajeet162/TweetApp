@@ -1,0 +1,61 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+# trigger:
+# - master
+
+# pool:
+#   name: 'MyAgent'
+
+# steps:
+# - script: echo Hello, world!
+#   displayName: 'Run a one-line script'
+
+# - script: |
+#     echo Add other tasks to build, test, and deploy your project.
+#     echo See https://aka.ms/yaml
+#   displayName: 'Run a multi-line script'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Dev pipeline for the authentication service
+trigger:
+  branches:
+    include:
+      - dev  # Trigger pipeline on changes to the dev branch
+
+pool:
+  name: 'MyAgent'  # Specifies the agent pool to use for this pipeline
+
+# Build stage using the build-java.yml template
+stages:
+  - template: ../shared-templates/build-java.yml
+    parameters:
+      environment: dev
+
+  # Dockerize stage using the dockerize.yml template
+  - template: ../shared-templates/dockerize.yml
+    parameters:
+      environment: dev
+
+  # Deploy stage using the deploy-cloudfoundry.yml template
+  - template: ../shared-templates/deploy-cloudfoundry.yml
+    parameters:
+      environment: dev
+      cloudfoundryManifest: $(Build.SourcesDirectory)/cloudfoundry/dev/manifest.yml
