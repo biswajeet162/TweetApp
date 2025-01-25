@@ -55,10 +55,10 @@ stages:
       - job: BuildDockerImage
         displayName: Build Docker Image
         steps:
-          # Step 1: Add Cloud Foundry CLI to the PATH
+          # Step 1: Add Cloud Foundry CLI to the PATH explicitly
           - script: |
               echo "Adding Cloud Foundry CLI to PATH..."
-              set PATH=C:\Program Files\Cloud Foundry\cf;%PATH%  # Adjust this if cf is installed elsewhere
+              setx PATH "C:\Program Files\Cloud Foundry\cf;%PATH%" /M  # Update path globally for the agent
               cf --version  # Verify cf is accessible
             displayName: Verify cf CLI Installation
 
@@ -90,8 +90,6 @@ stages:
           - script: |
               cf push tweeter-authentication-service-test --docker-image $(Build.Repository.Name) --random-route --no-start --env SPRING_PROFILES_ACTIVE=test
             displayName: Push Docker Image to Cloud Foundry
-
-
 
 
 
