@@ -38,7 +38,7 @@
 trigger:
   branches:
     include:
-      - master  # Trigger pipeline on changes to the dev branch
+      - dev  # Trigger pipeline on changes to the dev branch
 
 pool:
   name: 'MyAgent'  # Specifies the agent pool to use for this pipeline
