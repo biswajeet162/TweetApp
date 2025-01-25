@@ -92,7 +92,7 @@ stages:
         steps:
           - script: |
               echo "Logging into Cloud Foundry..."
-              cf login -a https://api.de.a9s.eu -u biswajeet155@gmail.com -p mypass@123
+              cf login -a https://api.de.a9s.eu -u biswajeet162@gmail.com -p 162@Biswa
 
               echo "Pushing the Docker image to Cloud Foundry..."
               cf push tweeter-authentication-service-test \
