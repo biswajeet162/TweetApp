@@ -57,18 +57,35 @@
 # # Run the application
 # ENTRYPOINT ["java", "-jar", "target/tweeter-authentication-service-0.0.1-SNAPSHOT.jar"]
 
+# Stage 1: Build Stage
+FROM maven:3.8-jdk-17 as build
 
-# Base image with JDK 17
-FROM eclipse-temurin:17-jdk-alpine
-
-# Set the working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy the Spring Boot JAR file
-COPY target/tweeter-authentication-service-*.jar app.jar
+# Copy the pom.xml first to leverage Docker cache for dependencies
+COPY pom.xml .
 
-# Expose the application port
+# Download dependencies without copying the whole source code
+RUN mvn dependency:go-offline
+
+# Copy the source code
+COPY src ./src
+
+# Build the application using Maven (including tests)
+RUN mvn clean install -DskipTests
+
+# Stage 2: Runtime Stage (Slim runtime image)
+FROM openjdk:17-jdk-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the application JAR file from the build stage
+COPY --from=build /app/target/tweeter-authentication-service-0.0.1-SNAPSHOT.jar ./tweeter-authentication-service.jar
+
+# Expose the port the app will run on
 EXPOSE 8080
 
 # Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "tweeter-authentication-service.jar"]
