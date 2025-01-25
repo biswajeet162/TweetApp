@@ -54,8 +54,8 @@ stages:
     parameters:
       environment: dev
 
-  # # Deploy stage using the deploy-cloudfoundry.yml template
-  # - template: ../shared-templates/deploy-cloudfoundry.yml
-  #   parameters:
-  #     environment: dev
-  #     cloudfoundryManifest: $(Build.SourcesDirectory)/cloudfoundry/dev/manifest.yml
+  # Deploy stage using the deploy-cloudfoundry.yml template
+  - template: ../shared-templates/deploy-cloudfoundry.yml
+    parameters:
+      environment: dev
+      cloudfoundryManifest: $(Build.SourcesDirectory)/cloudfoundry/dev/manifest.yml
