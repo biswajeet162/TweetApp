@@ -1,0 +1,23 @@
+# Template for deploying to Cloud Foundry
+parameters:
+  environment: ''                 # The target environment (e.g., dev, integration, production)
+  cloudfoundryManifest: ''        # Path to the Cloud Foundry manifest.yml file
+
+stages:
+  - stage: Deploy
+    displayName: Deploy to Cloud Foundry
+    dependsOn: PushDockerImage    # Ensure Docker image is pushed before deploying
+    jobs:
+      - job: DeployCF
+        displayName: Deploy to Cloud Foundry
+        steps:
+          - task: CloudFoundry@2
+            displayName: Deploy Application to Cloud Foundry
+            inputs:
+              # The service connection for Cloud Foundry
+              connectedServiceName: 'CFServiceConnection'
+              # Cloud Foundry organization and space
+              organization: 'my-org'
+              space: ${{ parameters.environment }}
+              command: 'Push'
+              manifest: ${{ parameters.cloudfoundryManifest }}
