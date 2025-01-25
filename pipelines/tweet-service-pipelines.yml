@@ -66,15 +66,40 @@ stages:
           # Check if 'cf' is already installed, otherwise install it
           - script: |
               echo "Checking if Cloud Foundry CLI (cf) is installed..."
-              cf --version || (
+              where cf || echo "cf CLI not found, proceeding with installation"
+
+              # Check if the file exists
+              if not exist "C:\Windows\System32\cf.exe" (
                 echo "Cloud Foundry CLI not found. Installing..."
-                curl -L "https://github.com/cloudfoundry/cli/releases/download/v7.3.0/cloudfoundry-cli_7.3.0_windows_x86_64.zip" -o cf-cli.zip
-                # Using PowerShell to extract the ZIP file
-                powershell -Command "Expand-Archive -Path cf-cli.zip -DestinationPath cf-cli"
-                move cf-cli\cf.exe C:\Windows\System32\
-                echo "Cloud Foundry CLI installed."
+
+                # Download cf CLI zip
+                curl -L "https://github.com/cloudfoundry/cli/releases/download/v8.9.0/cloudfoundry-cli_8.9.0_windows_x86_64.zip" -o cf-cli.zip
+
+                # Check if the download is successful
+                if exist cf-cli.zip (
+                  echo "Download successful, extracting zip..."
+                  
+                  # Extract the ZIP file using PowerShell Expand-Archive
+                  powershell -Command "Expand-Archive -Path cf-cli.zip -DestinationPath cf-cli"
+
+                  # Check if extraction was successful
+                  if exist cf-cli\cf.exe (
+                    echo "Extraction successful, moving cf.exe to System32..."
+                    move cf-cli\cf.exe C:\Windows\System32\
+                    echo "Cloud Foundry CLI installed successfully."
+                  ) else (
+                    echo "Extraction failed, cf.exe not found."
+                    exit 1
+                  )
+                ) else (
+                  echo "Download failed, cf-cli.zip not found."
+                  exit 1
+                )
+              ) else (
+                echo "Cloud Foundry CLI already installed."
               )
             displayName: Install Cloud Foundry CLI if not present
+
 
   - stage: Dockerize
     displayName: Build Docker Image
