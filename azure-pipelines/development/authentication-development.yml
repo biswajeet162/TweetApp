@@ -49,10 +49,10 @@ stages:
     parameters:
       environment: dev
 
-  # # Dockerize stage using the dockerize.yml template
-  # - template: ../shared-templates/dockerize.yml
-  #   parameters:
-  #     environment: dev
+  # Dockerize stage using the dockerize.yml template
+  - template: ../shared-templates/dockerize.yml
+    parameters:
+      environment: dev
 
   # # Deploy stage using the deploy-cloudfoundry.yml template
   # - template: ../shared-templates/deploy-cloudfoundry.yml
