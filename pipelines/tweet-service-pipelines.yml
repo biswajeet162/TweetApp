@@ -1,13 +1,13 @@
 trigger:
   branches:
     include:
-      - master
+      - master  # Trigger on changes to the master branch
 
 pool:
   name: 'MyAgent'
 
 variables:
-  dockerRegistryServiceConnection: 'biswaDockerRegistryConnection'
+  dockerRegistryServiceConnection: 'biswaDockerRegistryConnection'  # Replace with your actual service connection name
 
 stages:
   - stage: Build
@@ -31,7 +31,6 @@ stages:
           - script: |
               echo "Checking Maven setup..."
               mvn -version
-              echo PATH: %PATH%
             displayName: Verify Maven Setup
 
           - script: |
@@ -40,59 +39,62 @@ stages:
               mvn clean package -DskipTests
             displayName: Build Spring Boot Application
 
-  - stage: VerifyDocker
-    displayName: Verify Docker Installation
+  - stage: InstallDocker
+    displayName: Install Docker CLI
     dependsOn: Build
     jobs:
-      - job: CheckDocker
-        displayName: Check Docker Presence
+      - job: InstallDockerCLI
+        displayName: Install Docker CLI on Agent
         steps:
           - script: |
               echo "Checking Docker installation..."
-              docker --version
-              if %ERRORLEVEL% NEQ 0 (
-                echo "Docker is not installed. Failing the pipeline."
-                exit 1
-              )
+              docker --version || (echo "Docker is not installed. Please install Docker." && exit 1)
             displayName: Verify Docker Installation
+
+  - stage: InstallCF
+    displayName: Install Cloud Foundry CLI
+    dependsOn: InstallDocker
+    jobs:
+      - job: InstallCFCLI
+        displayName: Install Cloud Foundry CLI
+        steps:
+          - script: |
+              echo "Checking if Cloud Foundry CLI (cf) is installed..."
+              where cf >nul 2>&1 || (
+                echo "Cloud Foundry CLI is not installed. Installing..."
+                curl -L -o cf-cli.zip "https://github.com/cloudfoundry/cli/releases/download/v8.9.0/cloudfoundry-cli_8.9.0_windows_x86_64.zip"
+                powershell -Command "Expand-Archive -Path cf-cli.zip -DestinationPath cf-cli"
+                move cf-cli\cf.exe C:\Windows\System32\
+                echo "Cloud Foundry CLI installed successfully."
+              )
+            displayName: Install Cloud Foundry CLI if not present
 
   - stage: Dockerize
     displayName: Build Docker Image
-    dependsOn: VerifyDocker
+    dependsOn: InstallCF
     jobs:
       - job: BuildDockerImage
         displayName: Build Docker Image
         steps:
+          - script: |
+              echo "Checking Docker installation..."
+              docker --version || (echo "Docker is not installed. Please install Docker." && exit 1)
+            displayName: Verify Docker Installation
+
           - task: Docker@2
             displayName: Build Docker Image
             inputs:
               containerRegistry: $(dockerRegistryServiceConnection)
-              repository: 'tweeter-authentication-service'
+              repository: 'tweeter-authentication-service'  # Ensure this is lowercase
               command: 'build'
               Dockerfile: '$(Build.SourcesDirectory)/tweeter-authentication-service/Dockerfile'
               tags: |
                 latest
                 $(Build.BuildId)
 
-  - stage: VerifyCF
-    displayName: Verify Cloud Foundry CLI Installation
-    dependsOn: Dockerize
-    jobs:
-      - job: CheckCF
-        displayName: Check Cloud Foundry CLI Presence
-        steps:
-          - script: |
-              echo "Checking if Cloud Foundry CLI (cf) is installed..."
-              where cf >nul 2>&1
-              if %ERRORLEVEL% NEQ 0 (
-                echo "Cloud Foundry CLI is not installed. Failing the pipeline."
-                exit 1
-              )
-            displayName: Verify Cloud Foundry CLI Installation
-
   - stage: Deploy
     displayName: Deploy Docker Image to Cloud Foundry
-    dependsOn: VerifyCF
+    dependsOn: Dockerize
     jobs:
       - job: DeployDockerImage
         displayName: Deploy Docker Image to Cloud Foundry
@@ -100,11 +102,14 @@ stages:
           - script: |
               echo "Logging into Cloud Foundry..."
               cf login -a https://api.de.a9s.eu -u biswajeet162@gmail.com -p 162@Biswa
-            displayName: Cloud Foundry Login
+
+              echo "Targeting Cloud Foundry space..."
+              cf target -o biswajeet162_gmail_com -s prod
+            displayName: Cloud Foundry Login and Target Space
 
           - script: |
               echo "Deploying the Docker image to Cloud Foundry..."
-              cf push tweeter-authentication-service-prod --docker-image $(Build.Repository.Name):$(Build.BuildId) --random-route --no-start --env SPRING_PROFILES_ACTIVE=prod
+              cf push tweeter-authentication-service-prod --docker-image biswadockerregistry/tweeter-authentication-service:$(Build.BuildId) --random-route --no-start --env SPRING_PROFILES_ACTIVE=test
             displayName: Push Docker Image to Cloud Foundry
 
 
