@@ -1,0 +1,30 @@
+# Template for building Java services
+parameters:
+  environment: ''  # The target environment (dev, integration, production)
+
+stages:
+  - stage: Build
+    displayName: Build Java Application
+    jobs:
+      - job: BuildJavaApp
+        displayName: Build Java Application
+        steps:
+          - checkout: self
+            displayName: Checkout Code
+
+          # Step: Set up Java 17 for building the application
+          - script: |
+              echo "Setting up Java 17..."
+              set JAVA_HOME=C:\Program Files\Java\jdk-17
+              set PATH=%JAVA_HOME%\bin;%PATH%
+              java -version
+            displayName: Set Up Java Environment
+
+          # Step: Build the Spring Boot application using Maven
+          - script: |
+              echo "Building the application..."
+              echo Current Directory: %cd%
+              cd "$(Build.SourcesDirectory)\tweeter-authentication-service"
+              echo Now in Directory: %cd%
+              mvn clean package -DskipTests
+            displayName: Build Spring Boot Application
