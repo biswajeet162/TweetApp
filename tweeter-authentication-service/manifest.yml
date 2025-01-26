@@ -14,6 +14,20 @@
 
 
 
+#
+#---
+#applications:
+#  - name: tweeter-authentication-service-prod  # Name of the app
+#    memory: 1024M                              # Memory allocated to the app
+#    instances: 1                               # Number of instances to run
+#    docker:
+#      image: '$(dockerRegistryServiceConnection)/tweeter-authentication-service:latest'  # Docker image with the latest tag
+#
+#    env:
+#      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+ } }'
+#      SPRING_PROFILES_ACTIVE: prod             # Set the active Spring profile
+#      JAVA_OPTS: "-Xmx300m -Xms300m -XX:MaxMetaspaceSize=100m -XX:ReservedCodeCacheSize=30m -Xss512k"
+#
 
 ---
 applications:
@@ -21,16 +35,12 @@ applications:
     memory: 1024M                              # Memory allocated to the app
     instances: 1                               # Number of instances to run
     docker:
-      image: '$(dockerRegistryServiceConnection)/tweeter-authentication-service:latest'  # Docker image with the latest tag
+      image: 'tweeter-authentication-service:latest'  # Reference to the locally built image
 
-#    docker:
-#      image: biswadockerregistry/tweeter-authentication-service:latest
     env:
-      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+ } }'
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+ } }'  # Set Java 17 for the OpenJDK buildpack (if applicable)
       SPRING_PROFILES_ACTIVE: prod             # Set the active Spring profile
-      JAVA_OPTS: "-Xmx300m -Xms300m -XX:MaxMetaspaceSize=100m -XX:ReservedCodeCacheSize=30m -Xss512k"
-
-
+      JAVA_OPTS: "-Xmx300m -Xms300m -XX:MaxMetaspaceSize=100m -XX:ReservedCodeCacheSize=30m -Xss512k"  # Adjust JVM settings
 
 
 
