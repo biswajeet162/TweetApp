@@ -115,13 +115,23 @@ stages:
 
               echo "Targeting Cloud Foundry space..."
               cf target -o biswajeet162_gmail_com -s production
-            displayName: Cloud Foundry Login and Target Space
 
-          - script: |
-              echo "Deploying the Docker image using the manifest file..."
-              cf push -f $(Build.SourcesDirectory)/tweeter-authentication-service/manifest.yml
-            displayName: Push Docker Image to Cloud Foundry Using Manifest File
-
+              echo "Deploying the locally built Docker image to Cloud Foundry..."
+              cf push tweeter-authentication-service-prod -o 'tweeter-authentication-service:latest'  # Use the locally built image
+            displayName: Deploy Docker Image to Cloud Foundry
+#          - script: |
+#              echo "Logging into Cloud Foundry..."
+#              cf login -a https://api.de.a9s.eu -u biswajeet162@gmail.com -p 162@Biswa
+#
+#              echo "Targeting Cloud Foundry space..."
+#              cf target -o biswajeet162_gmail_com -s production
+#            displayName: Cloud Foundry Login and Target Space
+#
+#          - script: |
+#              echo "Deploying the Docker image using the manifest file..."
+#              cf push -f $(Build.SourcesDirectory)/tweeter-authentication-service/manifest.yml
+#            displayName: Push Docker Image to Cloud Foundry Using Manifest File
+#
 
 
 #6th
