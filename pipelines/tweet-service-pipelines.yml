@@ -64,41 +64,48 @@ stages:
         displayName: Install Cloud Foundry CLI
         steps:
           # Check if 'cf' is already installed, otherwise install it
+          # - script: |
           - script: |
               echo "Checking if Cloud Foundry CLI (cf) is installed..."
-              where cf || echo "cf CLI not found, proceeding with installation"
+              where cf >nul 2>&1
+              if %ERRORLEVEL% EQU 0 (
+                echo "Cloud Foundry CLI is already installed.................................................................................."
+              ) else (
+                echo "Cloud Foundry CLI not found. Installing..................................................................................."
 
-              # Check if the file exists
-              if not exist "C:\Windows\System32\cf.exe" (
-                echo "Cloud Foundry CLI not found. Installing..."
+                REM Download the cf CLI zip file
+                curl -L -o cf-cli.zip "https://github.com/cloudfoundry/cli/releases/download/v8.9.0/cloudfoundry-cli_8.9.0_windows_x86_64.zip"
 
-                # Download cf CLI zip
-                curl -L "https://github.com/cloudfoundry/cli/releases/download/v8.9.0/cloudfoundry-cli_8.9.0_windows_x86_64.zip" -o cf-cli.zip
-
-                # Check if the download is successful
+                REM Verify if the file was downloaded successfully
                 if exist cf-cli.zip (
                   echo "Download successful, extracting zip..."
-                  
-                  # Extract the ZIP file using PowerShell Expand-Archive
-                  powershell -Command "Expand-Archive -Path cf-cli.zip -DestinationPath cf-cli"
 
-                  # Check if extraction was successful
+                  REM Extract the zip file using 7-Zip or fallback method
+                  powershell -Command "Expand-Archive -Path cf-cli.zip -DestinationPath cf-cli" || (
+                    echo "Expand-Archive failed, attempting extraction with 7-Zip..."
+                    if exist "C:\Program Files\7-Zip\7z.exe" (
+                      "C:\Program Files\7-Zip\7z.exe" x cf-cli.zip -o"cf-cli"
+                    ) else (
+                      echo "7-Zip not found. Please install 7-Zip or fix the zip issue."
+                      exit 1
+                    )
+                  )
+
+                  REM Check if cf.exe exists after extraction
                   if exist cf-cli\cf.exe (
                     echo "Extraction successful, moving cf.exe to System32..."
-                    move cf-cli\cf.exe C:\Windows\System32\
+                    move cf-cli\cf.exe C:\Windows\System32\ >nul
                     echo "Cloud Foundry CLI installed successfully."
                   ) else (
-                    echo "Extraction failed, cf.exe not found."
+                    echo "Extraction failed. cf.exe not found in extracted files."
                     exit 1
                   )
                 ) else (
-                  echo "Download failed, cf-cli.zip not found."
+                  echo "Download failed. The file cf-cli.zip does not exist."
                   exit 1
                 )
-              ) else (
-                echo "Cloud Foundry CLI already installed."
               )
-            displayName: Install Cloud Foundry CLI if not present
+            displayName: "Install Cloud Foundry CLI if not present"
 
 
   - stage: Dockerize
