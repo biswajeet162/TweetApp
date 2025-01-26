@@ -104,7 +104,7 @@ stages:
               cf login -a https://api.de.a9s.eu -u biswajeet162@gmail.com -p 162@Biswa
 
               echo "Targeting Cloud Foundry space..."
-              cf target -o biswajeet162_gmail_com -s prod
+              cf target -o biswajeet162_gmail_com -s production
             displayName: Cloud Foundry Login and Target Space
 
           - script: |
