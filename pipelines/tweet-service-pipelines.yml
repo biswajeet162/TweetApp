@@ -228,14 +228,14 @@ stages:
 #            displayName: Build Spring Boot Application
 #
 #
-          - script: |
-              echo "Listing contents of Build.SourcesDirectory..."
-              dir "$(Build.SourcesDirectory)"
-              echo "Listing contents of tweeter-authentication-service..."
-              dir "$(Build.SourcesDirectory)/tweeter-authentication-service"
-              echo "Listing contents of target..."
-              dir "$(Build.SourcesDirectory)/tweeter-authentication-service/target"
-            displayName: Debug Directory Structure
+#          - script: |
+#              echo "Listing contents of Build.SourcesDirectory..."
+#              dir "$(Build.SourcesDirectory)"
+#              echo "Listing contents of tweeter-authentication-service..."
+#              dir "$(Build.SourcesDirectory)/tweeter-authentication-service"
+#              echo "Listing contents of target..."
+#              dir "$(Build.SourcesDirectory)/tweeter-authentication-service/target"
+#            displayName: Debug Directory Structure
 
 #  - stage: InstallDocker
 #    displayName: Install Docker CLI
