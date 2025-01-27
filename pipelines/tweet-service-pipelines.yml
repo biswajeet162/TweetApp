@@ -124,7 +124,7 @@ stages:
 
   - stage: DeployToAppService
     displayName: Deploy to Azure App Service
-    dependsOn: PushDockerImage
+#    dependsOn: PushDockerImage
     jobs:
       - job: DeployJob
         displayName: Deploy to Azure App Service
