@@ -3,8 +3,7 @@ applications:
   - name: tweeter-authentication-service-prod        # Name of the app
     memory: 1024M                                     # Memory allocated to the app
     instances: 1                                      # Number of instances to run
-    docker:
-      image: tweetapp.azurecr.io/tweeter-authentication-service:latest  # Docker image path
+    path: target/tweeter-authentication-service.jar
     buildpacks:
       - java_buildpack                                # Using the Java buildpack
     env:

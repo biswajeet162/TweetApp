@@ -141,11 +141,8 @@ stages:
 
           # Step 3: Deploy Docker image to Cloud Foundry
           - script: |
-              echo "Deploying application to Cloud Foundry using manifest.yml..."
-              cf push -f manifest.yml
-            env:
-              ACR_USERNAME: $(ACR_USERNAME)  # ACR username (set in pipeline variables)
-              ACR_PASSWORD: $(ACR_PASSWORD)  # ACR password (set in pipeline secrets)
+              echo "Deploying .jar application to Cloud Foundry using manifest.yml..."
+              cf push -f $(Build.SourcesDirectory)/tweeter-authentication-service/manifest.yml
             displayName: Deploy Application to Cloud Foundry
 
 
