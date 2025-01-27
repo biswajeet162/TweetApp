@@ -118,9 +118,7 @@ stages:
         steps:
           # Step 1: Install Cloud Foundry CLI
           - script: |
-              echo "Installing Cloud Foundry CLI...*******************************************************"
-#              wget -q -O cf-cli.deb https://packages.cloudfoundry.org/stable?release=debian64
-#              sudo dpkg -i cf-cli.deb
+              echo "Installing Cloud Foundry CLI................................"
               cf --version
             displayName: Install Cloud Foundry CLI
 
@@ -141,12 +139,6 @@ stages:
               ACR_USERNAME: $(ACR_USERNAME)  # ACR username (set in pipeline variables)
               ACR_PASSWORD: $(ACR_PASSWORD)  # ACR password (set in pipeline secrets)
             displayName: Deploy Application to Cloud Foundry
-
-
-
-
-
-
 
 
 
