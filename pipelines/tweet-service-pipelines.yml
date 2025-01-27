@@ -130,7 +130,7 @@ stages:
               
               echo "Targeting Cloud Foundry space..."
               cf target -o biswajeet162_gmail_com -s production
-              displayName: Cloud Foundry Login and Target Space
+#              displayName: Cloud Foundry Login and Target Space
 
 #              echo "Logging in to Cloud Foundry..."
 #              cf login -a $(cfApi) -u $(CF_USER) -p $(CF_PASSWORD) -o $(cfOrg) -s $(cfSpace)
