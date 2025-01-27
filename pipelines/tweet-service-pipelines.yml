@@ -13,7 +13,7 @@ variables:
   cfApi: 'https://api.de.a9s.eu'  # Replace with your Cloud Foundry API endpoint
   cfOrg: 'biswajeet162_@gmail.com'  # Replace with your Cloud Foundry organization
   cfSpace: 'production'  # Replace with your Cloud Foundry space
-  cfAppName: 'tweeter-auth-service'  # Replace with your Cloud Foundry app name
+  cfAppName: 'tweeter-auth-service-prod'  # Replace with your Cloud Foundry app name
 
   CF_USER: 'biswajeet162@gmail.com'
   CF_PASSWORD: '162@Biswa'
@@ -142,11 +142,21 @@ stages:
           # Step 3: Deploy Docker image to Cloud Foundry
           - script: |
               echo "Deploying application to Cloud Foundry..."
-              cf push $(cfAppName) --docker-image $(acrLoginServer)/$(repository):latest --docker-username $(ACR_USERNAME) --docker-password $(ACR_PASSWORD)
+              cf push $(cfAppName) \
+                --docker-image $(acrLoginServer)/$(repository):latest \
+                --docker-username $(ACR_USERNAME) \
+                --docker-password $(ACR_PASSWORD) \
+                -m 1024M \
+                -i 1 \
+                -b java_buildpack \
+                -e JBP_CONFIG_OPEN_JDK_JRE='{ jre: { version: 17.+ } }' \
+                -e SPRING_PROFILES_ACTIVE=prod \
+                -e JAVA_OPTS="-Xmx300m -Xms300m -XX:MaxMetaspaceSize=100m -XX:ReservedCodeCacheSize=30m -Xss512k"
             env:
               ACR_USERNAME: $(ACR_USERNAME)  # ACR username (set in pipeline variables)
               ACR_PASSWORD: $(ACR_PASSWORD)  # ACR password (set in pipeline secrets)
             displayName: Deploy Application to Cloud Foundry
+
 
 
 
