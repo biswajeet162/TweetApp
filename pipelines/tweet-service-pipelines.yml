@@ -48,6 +48,9 @@ stages:
               echo PATH: %PATH%
             displayName: Verify Maven Setup
 
+
+
+
           # Step 4: Build the application with Maven
           - script: |
               echo "Building the application..."
@@ -58,6 +61,16 @@ stages:
               echo "Checking for .jar file..................................................................................................................................................."
               dir "$(Build.SourcesDirectory)/tweeter-authentication-service/target"
             displayName: Build Spring Boot Application
+
+
+          - script: |
+              echo "Listing contents of Build.SourcesDirectory..."
+              dir "$(Build.SourcesDirectory)"
+              echo "Listing contents of tweeter-authentication-service..."
+              dir "$(Build.SourcesDirectory)/tweeter-authentication-service"
+              echo "Listing contents of target..."
+              dir "$(Build.SourcesDirectory)/tweeter-authentication-service/target"
+            displayName: Debug Directory Structure
 
 #  - stage: InstallDocker
 #    displayName: Install Docker CLI
