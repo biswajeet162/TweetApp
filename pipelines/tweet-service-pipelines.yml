@@ -123,9 +123,17 @@ stages:
             displayName: Install Cloud Foundry CLI
 
           # Step 2: Log in to Cloud Foundry
+
           - script: |
-              echo "Logging in to Cloud Foundry..."
-              cf login -a $(cfApi) -u $(CF_USER) -p $(CF_PASSWORD) -o $(cfOrg) -s $(cfSpace)
+              echo "Logging into Cloud Foundry..."
+              cf login -a https://api.de.a9s.eu -u biswajeet162@gmail.com -p 162@Biswa
+              
+              echo "Targeting Cloud Foundry space..."
+              cf target -o biswajeet162_gmail_com -s production
+              displayName: Cloud Foundry Login and Target Space
+
+#              echo "Logging in to Cloud Foundry..."
+#              cf login -a $(cfApi) -u $(CF_USER) -p $(CF_PASSWORD) -o $(cfOrg) -s $(cfSpace)
             env:
               CF_USER: $(CF_USER)       # Cloud Foundry username (set in pipeline variables)
               CF_PASSWORD: $(CF_PASSWORD)  # Cloud Foundry password (set in pipeline secrets)
@@ -412,7 +420,7 @@ stages:
 #           - script: |
 #               echo "Logging into Cloud Foundry..."
 #               cf login -a https://api.de.a9s.eu -u biswajeet162@gmail.com -p 162@Biswa
-
+#
 #               echo "Targeting Cloud Foundry space..."
 #               cf target -o biswajeet162_gmail_com -s production
 #             displayName: Cloud Foundry Login and Target Space
