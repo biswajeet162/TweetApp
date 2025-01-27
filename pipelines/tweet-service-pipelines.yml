@@ -8,17 +8,6 @@ pool:
 
 variables:
   dockerRegistryServiceConnection: 'biswaDockerRegistryConnection'  # Replace with your actual service connection name
-  acrLoginServer: 'tweetapp.azurecr.io'  # Replace with your ACR login server
-  repository: 'tweeter-authentication-service'  # Replace with your repository name
-  cfApi: 'https://api.de.a9s.eu'  # Replace with your Cloud Foundry API endpoint
-  cfOrg: 'biswajeet162_@gmail.com'  # Replace with your Cloud Foundry organization
-  cfSpace: 'production'  # Replace with your Cloud Foundry space
-  cfAppName: 'tweeter-auth-service-prod'  # Replace with your Cloud Foundry app name
-
-  CF_USER: 'biswajeet162@gmail.com'
-  CF_PASSWORD: '162@Biswa'
-  ACR_USERNAME: 'tweetapp'
-  ACR_PASSWORD: 'FLDpMoWjoG/cQubIPlQmhJITSapK/j9B7E6YqWdrI6+ACRDxwFHC'
 
 stages:
   - stage: Build
@@ -48,9 +37,6 @@ stages:
               echo PATH: %PATH%
             displayName: Verify Maven Setup
 
-
-
-
           # Step 4: Build the application with Maven
           - script: |
               echo "Building the application..."
@@ -58,19 +44,150 @@ stages:
               cd "$(Build.SourcesDirectory)\tweeter-authentication-service"
               echo Now in Directory: %cd%
               mvn clean package -DskipTests
-              echo "Checking for .jar file..................................................................................................................................................."
-              dir "$(Build.SourcesDirectory)/tweeter-authentication-service/target"
             displayName: Build Spring Boot Application
 
-
+  - stage: InstallDocker
+    displayName: Install Docker CLI
+    jobs:
+      - job: InstallDockerCLI
+        displayName: Install Docker CLI on Agent
+        steps:
           - script: |
-              echo "Listing contents of Build.SourcesDirectory..."
-              dir "$(Build.SourcesDirectory)"
-              echo "Listing contents of tweeter-authentication-service..."
-              dir "$(Build.SourcesDirectory)/tweeter-authentication-service"
-              echo "Listing contents of target..."
-              dir "$(Build.SourcesDirectory)/tweeter-authentication-service/target"
-            displayName: Debug Directory Structure
+              echo "Installing Docker CLI..--------------------------------------------------."
+              docker --version
+            displayName: Install Docker CLI (if not already installed)
+
+  - stage: Dockerize
+    displayName: Build Docker Image
+    dependsOn: Build
+    jobs:
+      - job: BuildDockerImage
+        displayName: Build Docker Image
+        steps:
+          # Ensure Docker is installed before running Docker commands
+          - script: |
+              echo "Checking Docker installation..."
+              docker --version
+            displayName: Verify Docker Installation
+
+          - task: Docker@2
+            displayName: Build Docker Image
+            inputs:
+              containerRegistry: $(dockerRegistryServiceConnection)
+              repository: 'tweeter-authentication-service'
+              command: 'build'
+              Dockerfile: '$(Build.SourcesDirectory)/tweeter-authentication-service/Dockerfile'
+              tags: |
+                latest
+                $(Build.BuildId)
+
+  - stage: PushDockerImage
+    displayName: Push Docker Image
+    dependsOn: Dockerize
+    jobs:
+      - job: PushDocker
+        displayName: Push Docker Image
+        steps:
+          - task: Docker@2
+            displayName: Push Docker Image
+            inputs:
+              containerRegistry: $(dockerRegistryServiceConnection)
+              repository: 'tweeter-authentication-service'
+              command: 'push'
+              tags: |
+                latest
+                $(Build.BuildId)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#trigger:
+#  branches:
+#    include:
+#      - master  # Trigger on changes to the master branch
+#
+#pool:
+#  name: 'MyAgent'
+#
+#variables:
+#  dockerRegistryServiceConnection: 'biswaDockerRegistryConnection'  # Replace with your actual service connection name
+#  acrLoginServer: 'tweetapp.azurecr.io'  # Replace with your ACR login server
+#  repository: 'tweeter-authentication-service'  # Replace with your repository name
+#  cfApi: 'https://api.de.a9s.eu'  # Replace with your Cloud Foundry API endpoint
+#  cfOrg: 'biswajeet162_@gmail.com'  # Replace with your Cloud Foundry organization
+#  cfSpace: 'production'  # Replace with your Cloud Foundry space
+#  cfAppName: 'tweeter-auth-service-prod'  # Replace with your Cloud Foundry app name
+#
+#  CF_USER: 'biswajeet162@gmail.com'
+#  CF_PASSWORD: '162@Biswa'
+#  ACR_USERNAME: 'tweetapp'
+#  ACR_PASSWORD: 'FLDpMoWjoG/cQubIPlQmhJITSapK/j9B7E6YqWdrI6+ACRDxwFHC'
+#
+#stages:
+#  - stage: Build
+#    displayName: Build Auth Service
+#    jobs:
+#      - job: BuildAuthService
+#        displayName: Build Auth Service
+#        steps:
+#          # Step 1: Checkout code
+#          - checkout: self
+#            displayName: Checkout Code
+#
+#          # Step 2: Set up JDK manually
+#          - script: |
+#              echo "Setting up Java 17..."
+#              set JAVA_HOME=C:\Program Files\Java\jdk-17
+#              set PATH=%JAVA_HOME%\bin;%PATH%
+#              echo JAVA_HOME: %JAVA_HOME%
+#              echo PATH: %PATH%
+#              java -version
+#            displayName: Set up Java 17
+#
+#          # Step 3: Verify Maven setup
+#          - script: |
+#              echo "Checking Maven setup..."
+#              mvn -version
+#              echo PATH: %PATH%
+#            displayName: Verify Maven Setup
+#
+#
+#
+#
+#          # Step 4: Build the application with Maven
+#          - script: |
+#              echo "Building the application..."
+#              echo Current Directory: %cd%
+#              cd "$(Build.SourcesDirectory)\tweeter-authentication-service"
+#              echo Now in Directory: %cd%
+#              mvn clean package -DskipTests
+#              echo "Checking for .jar file..................................................................................................................................................."
+#              dir "$(Build.SourcesDirectory)/tweeter-authentication-service/target"
+#            displayName: Build Spring Boot Application
+#
+#
+#          - script: |
+#              echo "Listing contents of Build.SourcesDirectory..."
+#              dir "$(Build.SourcesDirectory)"
+#              echo "Listing contents of tweeter-authentication-service..."
+#              dir "$(Build.SourcesDirectory)/tweeter-authentication-service"
+#              echo "Listing contents of target..."
+#              dir "$(Build.SourcesDirectory)/tweeter-authentication-service/target"
+#            displayName: Debug Directory Structure
 
 #  - stage: InstallDocker
 #    displayName: Install Docker CLI
@@ -124,45 +241,45 @@ stages:
 #                latest
 #                $(Build.BuildId)
 
-  - stage: DeployToCloudFoundry
-    displayName: Deploy to Cloud Foundry
-#    dependsOn: PushDockerImage
-    jobs:
-      - job: DeployCF
-        displayName: Deploy to Cloud Foundry
-        steps:
-          # Step 1: Install Cloud Foundry CLI
-          - script: |
-              echo "Installing Cloud Foundry CLI................................"
-              cf --version
-            displayName: Install Cloud Foundry CLI
-
-          # Step 2: Log in to Cloud Foundry
-
-          - script: |
-              echo "Logging into Cloud Foundry..."
-              cf login -a https://api.de.a9s.eu -u biswajeet162@gmail.com -p 162@Biswa
-              
-              echo "Targeting Cloud Foundry space..."
-              cf target -o biswajeet162_gmail_com -s production
-#              displayName: Cloud Foundry Login and Target Space
-
-#              echo "Logging in to Cloud Foundry..."
-#              cf login -a $(cfApi) -u $(CF_USER) -p $(CF_PASSWORD) -o $(cfOrg) -s $(cfSpace)
-            env:
-              CF_USER: $(CF_USER)       # Cloud Foundry username (set in pipeline variables)
-              CF_PASSWORD: $(CF_PASSWORD)  # Cloud Foundry password (set in pipeline secrets)
-            displayName: Log in to Cloud Foundry
-
-          - script: |
-              echo "Verifying .jar file exists..."
-              echo "Listing contents of $(Build.SourcesDirectory)/tweeter-authentication-service/target..."
-              dir "$(Build.SourcesDirectory)/tweeter-authentication-service/target"
-              if not exist "$(Build.SourcesDirectory)/tweeter-authentication-service/target/tweeter-authentication-service.jar" (
-                echo ".jar file not found. Build step may have failed."
-                exit 1
-              )
-            displayName: Verify .jar File and List Target Directory
+#  - stage: DeployToCloudFoundry
+#    displayName: Deploy to Cloud Foundry
+##    dependsOn: PushDockerImage
+#    jobs:
+#      - job: DeployCF
+#        displayName: Deploy to Cloud Foundry
+#        steps:
+#          # Step 1: Install Cloud Foundry CLI
+#          - script: |
+#              echo "Installing Cloud Foundry CLI................................"
+#              cf --version
+#            displayName: Install Cloud Foundry CLI
+#
+#          # Step 2: Log in to Cloud Foundry
+#
+#          - script: |
+#              echo "Logging into Cloud Foundry..."
+#              cf login -a https://api.de.a9s.eu -u biswajeet162@gmail.com -p 162@Biswa
+#
+#              echo "Targeting Cloud Foundry space..."
+#              cf target -o biswajeet162_gmail_com -s production
+##              displayName: Cloud Foundry Login and Target Space
+#
+##              echo "Logging in to Cloud Foundry..."
+##              cf login -a $(cfApi) -u $(CF_USER) -p $(CF_PASSWORD) -o $(cfOrg) -s $(cfSpace)
+#            env:
+#              CF_USER: $(CF_USER)       # Cloud Foundry username (set in pipeline variables)
+#              CF_PASSWORD: $(CF_PASSWORD)  # Cloud Foundry password (set in pipeline secrets)
+#            displayName: Log in to Cloud Foundry
+#
+#          - script: |
+#              echo "Verifying .jar file exists..."
+#              echo "Listing contents of $(Build.SourcesDirectory)/tweeter-authentication-service/target..."
+#              dir "$(Build.SourcesDirectory)/tweeter-authentication-service/target"
+#              if not exist "$(Build.SourcesDirectory)/tweeter-authentication-service/target/tweeter-authentication-service.jar" (
+#                echo ".jar file not found. Build step may have failed."
+#                exit 1
+#              )
+#            displayName: Verify .jar File and List Target Directory
 
           # Step 3: Deploy Docker image to Cloud Foundry
 #          - script: |
