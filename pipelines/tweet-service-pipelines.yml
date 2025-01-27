@@ -143,6 +143,9 @@ stages:
           - script: |
               echo "Deploying application to Cloud Foundry using manifest.yml..."
               cf push -f manifest.yml
+            env:
+              ACR_USERNAME: $(ACR_USERNAME)  # ACR username (set in pipeline variables)
+              ACR_PASSWORD: $(ACR_PASSWORD)  # ACR password (set in pipeline secrets)
             displayName: Deploy Application to Cloud Foundry
 
 
