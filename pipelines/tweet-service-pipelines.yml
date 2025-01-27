@@ -9,7 +9,7 @@ pool:
 
 variables:
   # Configurable Variables
-  azureSubscription: 'dab03976-9d8a-4e59-8222-6dde15fe9c72'  # Azure service connection
+  azureSubscription: 'azureResourceManager'  # Azure service connection
   appServiceName: 'tweet-app-authentication'  # Azure App Service name
   resourceGroupName: 'tweet'  # Azure Resource Group
   dockerRegistryServiceConnection: 'biswaDockerRegistryConnection'  # Docker Registry connection
