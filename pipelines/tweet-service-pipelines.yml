@@ -73,14 +73,15 @@ stages:
         steps:
           - script: |
               echo "Checking if Azure CLI is installed..."
-              if ! command -v az &> /dev/null; then
-                echo "Azure CLI not found. Installing..."
-                curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-                az --version  # Verify the installation
-              else
-                echo "Azure CLI is already installed."
-                az --version  # Verify the version if already installed
-              fi
+              az --version  # Verify the version if already installed
+#              if ! command -v az &> /dev/null; then
+#                echo "Azure CLI not found. Installing..."
+#                curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+#                az --version  # Verify the installation
+#              else
+#                echo "Azure CLI is already installed."
+#                az --version  # Verify the version if already installed
+#              fi
             displayName: Install Azure CLI if not present
 
 
