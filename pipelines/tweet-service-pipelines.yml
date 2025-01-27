@@ -142,7 +142,7 @@ stages:
           # Step 3: Deploy Docker image to Cloud Foundry
           - script: |
               echo "Deploying application to Cloud Foundry using manifest.yml..."
-              cf push -f ../manifest.yml
+              cf push -f manifest.yml
             displayName: Deploy Application to Cloud Foundry
 
 
