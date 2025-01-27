@@ -50,14 +50,10 @@ stages:
 
           # Step 4: Build the application with Maven
           - script: |
-#              echo "Building the application..."
-#              echo Current Directory: %cd%
-#              cd "$(Build.SourcesDirectory)\tweeter-authentication-service"
-#              echo Now in Directory: %cd%
-#              mvn clean package -DskipTests
-
               echo "Building the application..."
-              cd "$(Build.SourcesDirectory)/tweeter-authentication-service"
+              echo Current Directory: %cd%
+              cd "$(Build.SourcesDirectory)\tweeter-authentication-service"
+              echo Now in Directory: %cd%
               mvn clean package -DskipTests
               echo "Checking for .jar file..................................................................................................................................................."
               dir "$(Build.SourcesDirectory)/tweeter-authentication-service/target"
