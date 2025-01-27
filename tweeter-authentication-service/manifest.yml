@@ -3,7 +3,7 @@ applications:
   - name: tweeter-authentication-service-prod        # Name of the app
     memory: 1024M                                     # Memory allocated to the app
     instances: 1                                      # Number of instances to run
-    path: target/tweeter-authentication-service.jar
+    ath: $(Build.SourcesDirectory)/tweeter-authentication-service/target/tweeter-authentication-service.jar
     buildpacks:
       - java_buildpack                                # Using the Java buildpack
     env:

@@ -50,64 +50,70 @@ stages:
 
           # Step 4: Build the application with Maven
           - script: |
+#              echo "Building the application..."
+#              echo Current Directory: %cd%
+#              cd "$(Build.SourcesDirectory)\tweeter-authentication-service"
+#              echo Now in Directory: %cd%
+#              mvn clean package -DskipTests
+
               echo "Building the application..."
-              echo Current Directory: %cd%
-              cd "$(Build.SourcesDirectory)\tweeter-authentication-service"
-              echo Now in Directory: %cd%
+              cd "$(Build.SourcesDirectory)/tweeter-authentication-service"
               mvn clean package -DskipTests
+              echo "Checking for .jar file..................................................................................................................................................."
+              dir "$(Build.SourcesDirectory)/tweeter-authentication-service/target"
             displayName: Build Spring Boot Application
 
-  - stage: InstallDocker
-    displayName: Install Docker CLI
-    jobs:
-      - job: InstallDockerCLI
-        displayName: Install Docker CLI on Agent
-        steps:
-          - script: |
-              echo "Installing Docker CLI..."
-              docker --version
-            displayName: Install Docker CLI (if not already installed)
+#  - stage: InstallDocker
+#    displayName: Install Docker CLI
+#    jobs:
+#      - job: InstallDockerCLI
+#        displayName: Install Docker CLI on Agent
+#        steps:
+#          - script: |
+#              echo "Installing Docker CLI..."
+#              docker --version
+#            displayName: Install Docker CLI (if not already installed)
 
-  - stage: Dockerize
-    displayName: Build Docker Image
-    dependsOn: Build
-    jobs:
-      - job: BuildDockerImage
-        displayName: Build Docker Image
-        steps:
-          # Ensure Docker is installed before running Docker commands
-          - script: |
-              echo "Checking Docker installation..."
-              docker --version
-            displayName: Verify Docker Installation
+#  - stage: Dockerize
+#    displayName: Build Docker Image
+#    dependsOn: Build
+#    jobs:
+#      - job: BuildDockerImage
+#        displayName: Build Docker Image
+#        steps:
+#          # Ensure Docker is installed before running Docker commands
+#          - script: |
+#              echo "Checking Docker installation..."
+#              docker --version
+#            displayName: Verify Docker Installation
+#
+#          - task: Docker@2
+#            displayName: Build Docker Image
+#            inputs:
+#              containerRegistry: $(dockerRegistryServiceConnection)
+#              repository: 'tweeter-authentication-service'
+#              command: 'build'
+#              Dockerfile: '$(Build.SourcesDirectory)/tweeter-authentication-service/Dockerfile'
+#              tags: |
+#                latest
+#                $(Build.BuildId)
 
-          - task: Docker@2
-            displayName: Build Docker Image
-            inputs:
-              containerRegistry: $(dockerRegistryServiceConnection)
-              repository: 'tweeter-authentication-service'
-              command: 'build'
-              Dockerfile: '$(Build.SourcesDirectory)/tweeter-authentication-service/Dockerfile'
-              tags: |
-                latest
-                $(Build.BuildId)
-
-  - stage: PushDockerImage
-    displayName: Push Docker Image
-    dependsOn: Dockerize
-    jobs:
-      - job: PushDocker
-        displayName: Push Docker Image
-        steps:
-          - task: Docker@2
-            displayName: Push Docker Image
-            inputs:
-              containerRegistry: $(dockerRegistryServiceConnection)
-              repository: 'tweeter-authentication-service'
-              command: 'push'
-              tags: |
-                latest
-                $(Build.BuildId)
+#  - stage: PushDockerImage
+#    displayName: Push Docker Image
+#    dependsOn: Dockerize
+#    jobs:
+#      - job: PushDocker
+#        displayName: Push Docker Image
+#        steps:
+#          - task: Docker@2
+#            displayName: Push Docker Image
+#            inputs:
+#              containerRegistry: $(dockerRegistryServiceConnection)
+#              repository: 'tweeter-authentication-service'
+#              command: 'push'
+#              tags: |
+#                latest
+#                $(Build.BuildId)
 
   - stage: DeployToCloudFoundry
     displayName: Deploy to Cloud Foundry
@@ -138,6 +144,14 @@ stages:
               CF_USER: $(CF_USER)       # Cloud Foundry username (set in pipeline variables)
               CF_PASSWORD: $(CF_PASSWORD)  # Cloud Foundry password (set in pipeline secrets)
             displayName: Log in to Cloud Foundry
+
+          - script: |
+              echo "Verifying .jar file exists..."
+              if not exist "$(Build.SourcesDirectory)/tweeter-authentication-service/target/tweeter-authentication-service.jar" (
+                echo ".jar file not found. Build step may have failed."
+                exit 1
+              )
+              displayName: Verify .jar File
 
           # Step 3: Deploy Docker image to Cloud Foundry
           - script: |
