@@ -16,125 +16,132 @@ stages:
       - job: BuildAuthService
         displayName: Build Auth Service
         steps:
+          # Step 1: Checkout code
           - checkout: self
             displayName: Checkout Code
 
+          # Step 2: Set up JDK manually
           - script: |
               echo "Setting up Java 17..."
-              set JAVA_HOME="C:\Program Files\Java\jdk-17"
+              set JAVA_HOME=C:\Program Files\Java\jdk-17
               set PATH=%JAVA_HOME%\bin;%PATH%
               echo JAVA_HOME: %JAVA_HOME%
               echo PATH: %PATH%
               java -version
             displayName: Set up Java 17
 
+          # Step 3: Verify Maven setup
           - script: |
               echo "Checking Maven setup..."
               mvn -version
+              echo PATH: %PATH%
             displayName: Verify Maven Setup
 
+          # Step 4: Build the application with Maven
           - script: |
               echo "Building the application..."
+              echo Current Directory: %cd%
               cd "$(Build.SourcesDirectory)\tweeter-authentication-service"
+              echo Now in Directory: %cd%
               mvn clean package -DskipTests
             displayName: Build Spring Boot Application
 
   - stage: InstallDocker
     displayName: Install Docker CLI
-    dependsOn: Build
     jobs:
       - job: InstallDockerCLI
         displayName: Install Docker CLI on Agent
         steps:
           - script: |
-              echo "Checking Docker installation..."
-              docker --version || (echo "Docker is not installed. Please install Docker." && exit 1)
-            displayName: Verify Docker Installation
-
-  - stage: InstallCF
-    displayName: Install Cloud Foundry CLI
-    dependsOn: InstallDocker
-    jobs:
-      - job: InstallCFCLI
-        displayName: Install Cloud Foundry CLI
-        steps:
-          - script: |
-              echo "Checking if Cloud Foundry CLI (cf) is installed..."
-              where cf >nul 2>&1 || (
-                echo "Cloud Foundry CLI is not installed. Installing..."
-                curl -L -o cf-cli.zip "https://github.com/cloudfoundry/cli/releases/download/v8.9.0/cloudfoundry-cli_8.9.0_windows_x86_64.zip"
-                powershell -Command "Expand-Archive -Path cf-cli.zip -DestinationPath cf-cli"
-                move cf-cli\cf.exe C:\Windows\System32\
-                echo "Cloud Foundry CLI installed successfully."
-              )
-            displayName: Install Cloud Foundry CLI if not present
+              echo "Installing Docker CLI..--------------------------------------------------."
+              docker --version
+            displayName: Install Docker CLI (if not already installed)
 
   - stage: Dockerize
     displayName: Build Docker Image
-    dependsOn: InstallCF
+    dependsOn: Build
     jobs:
       - job: BuildDockerImage
         displayName: Build Docker Image
         steps:
+          # Ensure Docker is installed before running Docker commands
           - script: |
               echo "Checking Docker installation..."
-              docker --version || (echo "Docker is not installed. Please install Docker." && exit 1)
+              docker --version
             displayName: Verify Docker Installation
-
-#          - task: Docker@2
-#            displayName: Build Docker Image
-#            inputs:
-#              containerRegistry: $(dockerRegistryServiceConnection)
-#              repository: 'tweeter-authentication-service'  # Ensure this is lowercase
-#              command: 'build'
-#              Dockerfile: '$(Build.SourcesDirectory)/tweeter-authentication-service/Dockerfile'
-#              tags: |
-#                latest
-#                $(Build.BuildId)
 
           - task: Docker@2
             displayName: Build Docker Image
             inputs:
+              containerRegistry: $(dockerRegistryServiceConnection)
+              repository: 'tweeter-authentication-service'
               command: 'build'
               Dockerfile: '$(Build.SourcesDirectory)/tweeter-authentication-service/Dockerfile'
-              repository: 'tweeter-authentication-service'  # This is just the name, not the registry URL
               tags: |
                 latest
                 $(Build.BuildId)
 
-  - stage: Deploy
-    displayName: Deploy Docker Image to Cloud Foundry
+  - stage: PushDockerImage
+    displayName: Push Docker Image
     dependsOn: Dockerize
     jobs:
-      - job: DeployDockerImage
-        displayName: Deploy Docker Image to Cloud Foundry
+      - job: PushDocker
+        displayName: Push Docker Image
         steps:
-          - script: |
-              echo "Logging into Cloud Foundry..."
-              cf login -a https://api.de.a9s.eu -u biswajeet162@gmail.com -p 162@Biswa
+          - task: Docker@2
+            displayName: Push Docker Image
+            inputs:
+              containerRegistry: $(dockerRegistryServiceConnection)
+              repository: 'tweeter-authentication-service'
+              command: 'push'
+              tags: |
+                latest
+                $(Build.BuildId)
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
 
-              echo "Targeting Cloud Foundry space..."
-              cf target -o biswajeet162_gmail_com -s production
-
-              echo "Deploying the locally built Docker image to Cloud Foundry..."
-              cf push tweeter-authentication-service-prod -o 'tweeter-authentication-service:latest'  # Use the locally built image
-            displayName: Deploy Docker Image to Cloud Foundry
-#          - script: |
-#              echo "Logging into Cloud Foundry..."
-#              cf login -a https://api.de.a9s.eu -u biswajeet162@gmail.com -p 162@Biswa
-#
-#              echo "Targeting Cloud Foundry space..."
-#              cf target -o biswajeet162_gmail_com -s production
-#            displayName: Cloud Foundry Login and Target Space
-#
-#          - script: |
-#              echo "Deploying the Docker image using the manifest file..."
-#              cf push -f $(Build.SourcesDirectory)/tweeter-authentication-service/manifest.yml
-#            displayName: Push Docker Image to Cloud Foundry Using Manifest File
-#
-
-
-#6th
+          #6th
 # trigger:
 #   branches:
 #     include:
