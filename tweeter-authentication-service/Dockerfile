@@ -29,6 +29,37 @@
 
 
 
+#
+# # Use an official OpenJDK image as the base image
+# FROM openjdk:17-jdk-slim
+#
+# # Install Maven to build the project
+# RUN apt-get update && apt-get install -y maven
+#
+# # Set the working directory in the container
+# WORKDIR /app
+#
+# # Copy the pom.xml (or build.gradle) first to leverage Docker cache
+# COPY pom.xml .
+#
+# # Download dependencies without copying the whole source code
+# RUN mvn dependency:go-offline
+#
+# # Copy the source code
+# COPY src ./src
+#
+# # Build the application using Maven
+# RUN mvn clean install -DskipTests
+#
+# # Expose the port the app will run on
+# EXPOSE 8080
+#
+# # Run the application
+# ENTRYPOINT ["java", "-jar", "target/tweeter-authentication-service-0.0.1-SNAPSHOT.jar"]
+
+
+
+
 
 # Use an official OpenJDK image as the base image
 FROM openjdk:17-jdk-slim
@@ -39,10 +70,10 @@ RUN apt-get update && apt-get install -y maven
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the pom.xml (or build.gradle) first to leverage Docker cache
+# Copy the pom.xml first to leverage Docker cache and download dependencies
 COPY pom.xml .
 
-# Download dependencies without copying the whole source code
+# Download the dependencies without copying the whole source code
 RUN mvn dependency:go-offline
 
 # Copy the source code
@@ -54,5 +85,11 @@ RUN mvn clean install -DskipTests
 # Expose the port the app will run on
 EXPOSE 8080
 
-# Run the application
+# Ensure the jar name is correct and matches the build output
+RUN ls -l target/   # To verify the jar is present
+
+# Run the application (replace with correct jar name)
 ENTRYPOINT ["java", "-jar", "target/tweeter-authentication-service-0.0.1-SNAPSHOT.jar"]
+
+# Optionally, provide a fallback CMD in case ENTRYPOINT fails
+CMD ["java", "-jar", "target/tweeter-authentication-service-0.0.1-SNAPSHOT.jar"]

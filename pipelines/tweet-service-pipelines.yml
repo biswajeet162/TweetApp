@@ -6,8 +6,16 @@ trigger:
 pool:
   name: 'MyAgent'
 
+
 variables:
-  dockerRegistryServiceConnection: 'biswaDockerRegistryConnection'  # Replace with your actual service connection name
+  # Configurable Variables
+  azureSubscription: 'dab03976-9d8a-4e59-8222-6dde15fe9c72'  # Azure service connection
+  appServiceName: 'tweet-app-authentication'  # Azure App Service name
+  resourceGroupName: 'tweet'  # Azure Resource Group
+  dockerRegistryServiceConnection: 'biswaDockerRegistryConnection'  # Docker Registry connection
+  acrImageName: 'tweeter-authentication-service'  # ACR repository name
+  dockerRegistryServiceConnectionUsername: 'tweetapp'  # Replace with your ACR username
+  dockerRegistryServiceConnectionPassword: 'B+aVZ/UdvrVb7UdQbFj5CAsIsc4IEKrYA2YKlcv9VK+ACRC3HNwM'  # Replace with your ACR password (or use a secure method)
 
 stages:
   - stage: Build
@@ -70,16 +78,19 @@ stages:
               docker --version
             displayName: Verify Docker Installation
 
+
           - task: Docker@2
             displayName: Build Docker Image
             inputs:
               containerRegistry: $(dockerRegistryServiceConnection)
-              repository: 'tweeter-authentication-service'
+              repository: $(acrImageName)
               command: 'build'
               Dockerfile: '$(Build.SourcesDirectory)/tweeter-authentication-service/Dockerfile'
               tags: |
                 latest
                 $(Build.BuildId)
+                
+                
 
   - stage: PushDockerImage
     displayName: Push Docker Image
@@ -92,13 +103,39 @@ stages:
             displayName: Push Docker Image
             inputs:
               containerRegistry: $(dockerRegistryServiceConnection)
-              repository: 'tweeter-authentication-service'
+              repository: $(acrImageName)
               command: 'push'
               tags: |
                 latest
                 $(Build.BuildId)
 
 
+
+  - stage: DeployToAppService
+    displayName: Deploy to Azure App Service
+    dependsOn: PushDockerImage
+    jobs:
+      - job: DeployJob
+        displayName: Deploy to Azure App Service
+        steps:
+          # Use Azure CLI to deploy the container
+          - task: AzureCLI@2
+            displayName: Deploy Docker Image to Azure App Service
+            inputs:
+              azureSubscription: $(azureSubscription)
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                echo "Deploying Docker image to Azure App Service..."
+                az webapp config container set \
+                  --name $(appServiceName) \
+                  --resource-group $(resourceGroupName) \
+                  --docker-custom-image-name $(acrImageName):latest \
+                  --docker-registry-server-url https://$(dockerRegistryServiceConnection) \
+                  --docker-registry-server-user $(dockerRegistryServiceConnectionUsername) \
+                  --docker-registry-server-password $(dockerRegistryServiceConnectionPassword)
+
+                echo "Deployment completed!"
 
 
 
@@ -180,14 +217,14 @@ stages:
 #            displayName: Build Spring Boot Application
 #
 #
-#          - script: |
-#              echo "Listing contents of Build.SourcesDirectory..."
-#              dir "$(Build.SourcesDirectory)"
-#              echo "Listing contents of tweeter-authentication-service..."
-#              dir "$(Build.SourcesDirectory)/tweeter-authentication-service"
-#              echo "Listing contents of target..."
-#              dir "$(Build.SourcesDirectory)/tweeter-authentication-service/target"
-#            displayName: Debug Directory Structure
+          - script: |
+              echo "Listing contents of Build.SourcesDirectory..."
+              dir "$(Build.SourcesDirectory)"
+              echo "Listing contents of tweeter-authentication-service..."
+              dir "$(Build.SourcesDirectory)/tweeter-authentication-service"
+              echo "Listing contents of target..."
+              dir "$(Build.SourcesDirectory)/tweeter-authentication-service/target"
+            displayName: Debug Directory Structure
 
 #  - stage: InstallDocker
 #    displayName: Install Docker CLI
