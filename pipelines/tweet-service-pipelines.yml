@@ -141,20 +141,8 @@ stages:
 
           # Step 3: Deploy Docker image to Cloud Foundry
           - script: |
-              echo "Deploying application to Cloud Foundry..."
-              cf push $(cfAppName) \
-                --docker-image $(acrLoginServer)/$(repository):latest \
-                --docker-username $(ACR_USERNAME) \
-                --docker-password $(ACR_PASSWORD) \
-                -m 1024M \
-                -i 1 \
-                -b java_buildpack \
-                -e JBP_CONFIG_OPEN_JDK_JRE='{ jre: { version: 17.+ } }' \
-                -e SPRING_PROFILES_ACTIVE=prod \
-                -e JAVA_OPTS="-Xmx300m -Xms300m -XX:MaxMetaspaceSize=100m -XX:ReservedCodeCacheSize=30m -Xss512k"
-            env:
-              ACR_USERNAME: $(ACR_USERNAME)  # ACR username (set in pipeline variables)
-              ACR_PASSWORD: $(ACR_PASSWORD)  # ACR password (set in pipeline secrets)
+              echo "Deploying application to Cloud Foundry using manifest.yml..."
+              cf push -f ../manifest.yml
             displayName: Deploy Application to Cloud Foundry
 
 
