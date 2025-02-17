@@ -18,52 +18,52 @@ variables:
   dockerRegistryServiceConnectionPassword: 'B+aVZ/UdvrVb7UdQbFj5CAsIsc4IEKrYA2YKlcv9VK+ACRC3HNwM'  # Replace with your ACR password (or use a secure method)
 
 stages:
-#  - stage: Build
-#    displayName: Build Auth Service
-#    jobs:
-#      - job: BuildAuthService
-#        displayName: Build Auth Service
-#        steps:
-#          # Step 1: Checkout code
-#          - checkout: self
-#            displayName: Checkout Code
-#
-#          # Step 2: Set up JDK manually
-#          - script: |
-#              echo "Setting up Java 17..."
-#              set JAVA_HOME=C:\Program Files\Java\jdk-17
-#              set PATH=%JAVA_HOME%\bin;%PATH%
-#              echo JAVA_HOME: %JAVA_HOME%
-#              echo PATH: %PATH%
-#              java -version
-#            displayName: Set up Java 17
-#
-#          # Step 3: Verify Maven setup
-#          - script: |
-#              echo "Checking Maven setup..."
-#              mvn -version
-#              echo PATH: %PATH%
-#            displayName: Verify Maven Setup
-#
-#          # Step 4: Build the application with Maven
-#          - script: |
-#              echo "Building the application..."
-#              echo Current Directory: %cd%
-#              cd "$(Build.SourcesDirectory)\tweeter-authentication-service"
-#              echo Now in Directory: %cd%
-#              mvn clean package -DskipTests
-#            displayName: Build Spring Boot Application
+  - stage: Build
+    displayName: Build Auth Service
+    jobs:
+      - job: BuildAuthService
+        displayName: Build Auth Service
+        steps:
+          # Step 1: Checkout code
+          - checkout: self
+            displayName: Checkout Code
 
-#  - stage: InstallDocker
-#    displayName: Install Docker CLI
-#    jobs:
-#      - job: InstallDockerCLI
-#        displayName: Install Docker CLI on Agent
-#        steps:
-#          - script: |
-#              echo "Installing Docker CLI..--------------------------------------------------."
-#              docker --version
-#            displayName: Install Docker CLI (if not already installed)
+          # Step 2: Set up JDK manually
+          - script: |
+              echo "Setting up Java 17..."
+              set JAVA_HOME=C:\Program Files\Java\jdk-17
+              set PATH=%JAVA_HOME%\bin;%PATH%
+              echo JAVA_HOME: %JAVA_HOME%
+              echo PATH: %PATH%
+              java -version
+            displayName: Set up Java 17
+
+          # Step 3: Verify Maven setup
+          - script: |
+              echo "Checking Maven setup..."
+              mvn -version
+              echo PATH: %PATH%
+            displayName: Verify Maven Setup
+
+          # Step 4: Build the application with Maven
+          - script: |
+              echo "Building the application..."
+              echo Current Directory: %cd%
+              cd "$(Build.SourcesDirectory)\tweeter-authentication-service"
+              echo Now in Directory: %cd%
+              mvn clean package -DskipTests
+            displayName: Build Spring Boot Application
+
+  - stage: InstallDocker
+    displayName: Install Docker CLI
+    jobs:
+      - job: InstallDockerCLI
+        displayName: Install Docker CLI on Agent
+        steps:
+          - script: |
+              echo "Installing Docker CLI..--------------------------------------------------."
+              docker --version
+            displayName: Install Docker CLI (if not already installed)
 
   - stage: InstallAzureCLI
     displayName: Install Azure CLI
@@ -77,77 +77,49 @@ stages:
             displayName: Install Azure CLI if not present
 
 
-#  - stage: Dockerize
-#    displayName: Build Docker Image
-#    dependsOn: Build
-#    jobs:
-#      - job: BuildDockerImage
-#        displayName: Build Docker Image
-#        steps:
-#          # Ensure Docker is installed before running Docker commands
-#          - script: |
-#              echo "Checking Docker installation..."
-#              docker --version
-#            displayName: Verify Docker Installation
-#
-#
-#          - task: Docker@2
-#            displayName: Build Docker Image
-#            inputs:
-#              containerRegistry: $(dockerRegistryServiceConnection)
-#              repository: $(acrImageName)
-#              command: 'build'
-#              Dockerfile: '$(Build.SourcesDirectory)/tweeter-authentication-service/Dockerfile'
-#              tags: |
-#                latest
-#                $(Build.BuildId)
-                
-                
-
-#  - stage: PushDockerImage
-#    displayName: Push Docker Image
-#    dependsOn: Dockerize
-#    jobs:
-#      - job: PushDocker
-#        displayName: Push Docker Image
-#        steps:
-#          - task: Docker@2
-#            displayName: Push Docker Image
-#            inputs:
-#              containerRegistry: $(dockerRegistryServiceConnection)
-#              repository: $(acrImageName)
-#              command: 'push'
-#              tags: |
-#                latest
-#                $(Build.BuildId)
-
-
-  - stage: DeployToAppService
-    displayName: Deploy to Azure App Service
-#    dependsOn: PushDockerImage
+  - stage: Dockerize
+    displayName: Build Docker Image
+    dependsOn: Build
     jobs:
-      - job: DeployJob
-        displayName: Deploy to Azure App Service
+      - job: BuildDockerImage
+        displayName: Build Docker Image
         steps:
-          - task: AzureCLI@2
-            displayName: Deploy Docker Image to Azure App Service
-            inputs:
-              azureSubscription: $(azureSubscription)
-              scriptType: ps  # PowerShell (for Windows)
-              scriptLocation: inlineScript
-              inlineScript: |
-                echo "Setting up Azure CLI..."
-                az account set --subscription $(azureSubscription)
-                echo "Deploying Docker image to Azure App Service..."
-                az webapp config container set `
-                  --name $(appServiceName) `
-                  --resource-group $(resourceGroupName) `
-                  --docker-custom-image-name $(acrImageName):latest `
-                  --docker-registry-server-url https://$(dockerRegistryServiceConnection) `
-                  --docker-registry-server-user $(dockerRegistryServiceConnectionUsername) `
-                  --docker-registry-server-password $(dockerRegistryServiceConnectionPassword)
+          # Ensure Docker is installed before running Docker commands
+          - script: |
+              echo "Checking Docker installation..."
+              docker --version
+            displayName: Verify Docker Installation
 
-                echo "Deployment completed!"
+
+          - task: Docker@2
+            displayName: Build Docker Image
+            inputs:
+              containerRegistry: $(dockerRegistryServiceConnection)
+              repository: $(acrImageName)
+              command: 'build'
+              Dockerfile: '$(Build.SourcesDirectory)/tweeter-authentication-service/Dockerfile'
+              tags: |
+                latest
+                $(Build.BuildId)
+                
+                
+
+  - stage: PushDockerImage
+    displayName: Push Docker Image
+    dependsOn: Dockerize
+    jobs:
+      - job: PushDocker
+        displayName: Push Docker Image
+        steps:
+          - task: Docker@2
+            displayName: Push Docker Image
+            inputs:
+              containerRegistry: $(dockerRegistryServiceConnection)
+              repository: $(acrImageName)
+              command: 'push'
+              tags: |
+                latest
+                $(Build.BuildId)
 
 
 
