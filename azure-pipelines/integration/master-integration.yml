@@ -1,0 +1,57 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  name: 'MyAgent'
+
+variables:
+  dockerRegistryServiceConnection: '96548b53-003f-4c5c-b536-92e671ad8d92'
+  imageRepository: 'demo'
+  containerRegistry: 'biswaacr.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/DockerFile'
+  tag: '$(Build.BuildId)'
+
+  azureSubscription: 'myServicePrincipal'
+  appServiceName: 'myappservice123'
+  resourceGroupName: 'biswa-rg'
+
+  sonarProjectKey: 'demobiswa'
+  sonarHostUrl: 'https://sonarcloud.io/'
+  sonarToken: '$(SONARQUBE_TOKEN)'
+
+stages:
+  - stage: BuildJava
+    displayName: Build Java App
+    jobs:
+      - template: shared-templates/build-java.yml
+
+  - stage: SonarQube
+    displayName: Run SonarQube Analysis
+    dependsOn: BuildJava
+    jobs:
+      - template: shared-templates/sonar-analysis.yml
+
+  - stage: CodeCoverage
+    displayName: Run Code Coverage
+    dependsOn: SonarQube
+    jobs:
+      - template: shared-templates/jacoco-coverage.yml
+
+  - stage: InstallTools
+    displayName: Install CLI Tools
+    jobs:
+      - template: shared-templates/setup-tools.yml
+
+  - stage: DockerBuild
+    displayName: Build Docker Image
+    dependsOn: CodeCoverage
+    jobs:
+      - template: shared-templates/docker-build.yml
+
+  - stage: DockerPush
+    displayName: Push Docker Image
+    dependsOn: DockerBuild
+    jobs:
+      - template: shared-templates/docker-push.yml

@@ -8,6 +8,7 @@
         <option value="$PROJECT_DIR$/tweeter-home-timeline-service/pom.xml" />
         <option value="$PROJECT_DIR$/tweeter-user-timeline-service/pom.xml" />
         <option value="$PROJECT_DIR$/tweeter-authentication-service/pom.xml" />
+        <option value="$PROJECT_DIR$/tweeter-demo/pom.xml" />
       </list>
     </option>
   </component>

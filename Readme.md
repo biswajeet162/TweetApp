@@ -29,14 +29,41 @@
 |
 └── README.md                     # Documentation for pipelines----
 |
+└── tweeter-authentication-service
+|
 └── tweeter-tweet-service
 |
 └── tweeter-hometimeline-service
 |
 └── tweeter-usertimeline-service
 |
-└── tweeter-authentication-service
+└── demo-service
 |
 └── tweeter-frontend
 
 └── folder structure ------------------ -https://chatgpt.com/c/67935f1c-a144-8000-b442-524cfb81f043
+ 
+
+
+
+
+
+
+└── demo-service-java
+|
+|-azure-pipelines/
+        ├── integration/                  # Integration pipelines
+        │   ├── demo-service-integration.yml      # Integration pipeline for auth-service
+        |
+        ├── production/                   # Production pipelines
+        │   ├── demo-service-prod.yml             # Production pipeline for auth-service
+        |
+        ├── shared-templates/             # Reusable pipeline templates
+           ├── build-java.yml            # Template for building Java services
+           ├── deploy-integration.yml    # Template for deploying to integration environment
+           ├── deploy-prod.yml           # Template for deploying to production using Blue-Green deployment
+           ├── test-stage.yml            # Template for running tests
+           ├── sonarqube.yml             # Template for SonarQube analysis
+           └── utilities.yml             # Template for shared utility functions
+
+
