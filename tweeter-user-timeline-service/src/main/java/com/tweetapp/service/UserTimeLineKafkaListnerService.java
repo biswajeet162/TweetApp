@@ -2,6 +2,7 @@ package com.tweetapp.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tweetapp.custom_exceptions.TweetNotFound;
 import com.tweetapp.model.Comment;
 import com.tweetapp.model.Like;
 import com.tweetapp.model.Tweet;
@@ -52,6 +53,7 @@ public class UserTimeLineKafkaListnerService {
             commentRepository.save(comment1);
         }catch (Exception e){
             System.out.println("Error Comment --------------> " + e.getMessage());
+            throw new TweetNotFound("Commented Tweet Not Found" + e.getMessage());
         }
     }
 
@@ -67,6 +69,7 @@ public class UserTimeLineKafkaListnerService {
             likeRepository.save(like1);
         } catch (Exception e) {
             System.out.println("Error Likes --------------> " + e.getMessage());
+            throw new TweetNotFound("Liked Tweet Not Found" + e.getMessage());
         }
 
     }

@@ -2,6 +2,7 @@ package com.tweetapp.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tweetapp.custom_exceptions.TweetNotFound;
 import com.tweetapp.model.Comment;
 import com.tweetapp.model.Like;
 import com.tweetapp.model.Tweet;
@@ -49,15 +50,16 @@ public class HomeTimeLineKafkaListnerService {
         try{
             ObjectMapper objectMapper = new ObjectMapper();
             Comment comment1 = objectMapper.readValue(comment, Comment.class);
-            System.out.println("Deserialized Comment: " + comment1);
+//            System.out.println("\n\n\n\n\n\nDeserialized Comment: " + comment1);
             commentRepository.save(comment1);
         } catch (Exception e) {
-            System.out.println("Error Comment --------------> " + e.getMessage());
+            System.out.println("\n\n\n\n\n\nError Comment --------------> " + e.getMessage());
+            throw new TweetNotFound("Commented Tweet Not Found" + e.getMessage());
         }
 
     }
 
-    //@KafkaListener(topics = "like-topic", groupId = "home-timeline-group")
+    @KafkaListener(topics = "like-topic", groupId = "home-timeline-group")
     public void consumeLikeEvent(String like) throws JsonProcessingException {
 //        System.out.println("Received Like Event for Tweet ID: " + like);
         // Optional: Cache or preprocess the like data if needed
@@ -65,10 +67,11 @@ public class HomeTimeLineKafkaListnerService {
         try{
             ObjectMapper objectMapper = new ObjectMapper();
             Like like1 = objectMapper.readValue(like, Like.class);
-//            System.out.println("Deserialized Comment: " + like1);
+//            System.out.println("\n\n\n\n\n\nDeserialized Comment: " + like1);
             likeRepository.save(like1);
         }catch (Exception e){
-            System.out.println("Error Like --------------> " + e.getMessage());
+            System.out.println("\n\n\n\n\n\nError Like --------------> " + e.getMessage());
+            throw new TweetNotFound("Liked Tweet Not Found" + e.getMessage());
         }
 
     }

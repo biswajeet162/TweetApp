@@ -17,7 +17,7 @@ public class HomeTimelineController {
     @Autowired
     private HomeTimelineService homeTimelineService;
 
-    @GetMapping
+    @GetMapping( value = "")
     public ResponseEntity<List<TweetDTO>> getAllTweets() {
         return ResponseEntity.ok(homeTimelineService.getAllTweetsWithDetails());
     }

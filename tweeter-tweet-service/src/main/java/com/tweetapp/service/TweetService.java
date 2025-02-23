@@ -1,5 +1,6 @@
 package com.tweetapp.service;
 
+import com.tweetapp.custom_exceptions.TweetNotFound;
 import com.tweetapp.model.*;
 import com.tweetapp.repository.CommentRepository;
 import com.tweetapp.repository.LikeRepository;
@@ -51,7 +52,10 @@ public class TweetService {
 
     // Add comment to a tweet
     public Comment addComment(Long tweetId, CommentRequest commentRequest) {
-        Tweet tweet = tweetRepository.findById(tweetId).orElseThrow(() -> new RuntimeException("Tweet not found"));
+
+
+        Tweet tweet = tweetRepository.findById(tweetId).orElseThrow(() -> new TweetNotFound("Tweet not found"));
+
         Comment comment = new Comment();
         comment.setTweet(tweet);
         comment.setUserId(commentRequest.getUserId());
@@ -69,10 +73,10 @@ public class TweetService {
     // Like a tweet
     public void likeTweet(Long tweetId, Long userId) {
         if (likeRepository.existsByTweetIdAndUserId(tweetId, userId)) {
-            throw new RuntimeException("User already liked this tweet");
+            throw new TweetNotFound("User already liked this tweet");
         }
         TweetLikes tweetLikes = new TweetLikes();
-        tweetLikes.setTweet(tweetRepository.findById(tweetId).orElseThrow(() -> new RuntimeException("Tweet not found")));
+        tweetLikes.setTweet(tweetRepository.findById(tweetId).orElseThrow(() -> new TweetNotFound("Tweet not found")));
         tweetLikes.setUserId(userId);
         tweetLikes.setCreatedAt(new Date());
         TweetLikes savedTweetLikes = likeRepository.save(tweetLikes);

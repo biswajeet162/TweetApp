@@ -10,7 +10,6 @@ version: '3.8'
 
 
 
-
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
@@ -37,7 +36,7 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -51,105 +50,131 @@ services:
       timeout: 10s
       retries: 5
 
-  kafka-ui:
-    image: provectuslabs/kafka-ui:latest
-    container_name: kafka-ui
-    depends_on:
-      kafka:
-        condition: service_healthy
-    environment:
-      KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS: kafka:9092
-    ports:
-      - "9090:8080"
-    networks:
-      - app-network
 
-  mysql:
-    image: mysql:8
-    container_name: mysql-container
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: demo
-    ports:
-      - "3306:3306"
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: phpmyadmin
-    depends_on:
-      mysql:
-        condition: service_healthy
-    environment:
-      PMA_HOST: mysql
-      PMA_PORT: 3306
-    ports:
-      - "3307:80"
-    networks:
-      - app-network
 
-  auth-app:
-    build:
-      context: .././tweeter-authentication-service
-    container_name: auth-service-app
-    depends_on:
-      mysql:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
-    ports:
-      - "8081:8080"
-    networks:
-      - app-network
+  # kafka:
+  #   image: confluentinc/cp-kafka:7.5.0
+  #   container_name: kafka
+  #   depends_on:
+  #     zookeeper:
+  #       condition: service_healthy
+  #   environment:
+  #     KAFKA_BROKER_ID: 1
+  #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+  #     KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  #   ports:
+  #     - "9092:9092"
+  #   networks:
+  #     - app-network
+  #   healthcheck:
+  #     test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list"]
+  #     interval: 10s
+  #     timeout: 10s
+  #     retries: 5
 
-  tweet-app:
-    build:
-      context: .././tweeter-tweet-service
-    container_name: tweet-service-app
-    depends_on:
-      mysql:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
-    ports:
-      - "8082:8080"
-    networks:
-      - app-network
+  # kafka-ui:
+  #   image: provectuslabs/kafka-ui:latest
+  #   container_name: kafka-ui
+  #   depends_on:
+  #     kafka:
+  #       condition: service_healthy
+  #   environment:
+  #     KAFKA_CLUSTERS_0_NAME: local
+  #     KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS: kafka:9092
+  #   ports:
+  #     - "9090:8080"
+  #   networks:
+  #     - app-network
 
-  hometimeline-app:
-    build:
-      context: .././tweeter-home-timeline-service
-    container_name: hometimeline-service-app
-    depends_on:
-      mysql:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
-    ports:
-      - "8083:8080"
-    networks:
-      - app-network
+  # mysql:
+  #   image: mysql:8
+  #   container_name: mysql-container
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: password
+  #     MYSQL_DATABASE: demo
+  #   ports:
+  #     - "3306:3306"
+  #   networks:
+  #     - app-network
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
 
-  usertimeline-app:
-    build:
-      context: .././tweeter-user-timeline-service
-    container_name: usertimeline-service-app
-    depends_on:
-      mysql:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
-    ports:
-      - "8084:8080"
-    networks:
-      - app-network
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin:latest
+  #   container_name: phpmyadmin
+  #   depends_on:
+  #     mysql:
+  #       condition: service_healthy
+  #   environment:
+  #     PMA_HOST: mysql
+  #     PMA_PORT: 3306
+  #   ports:
+  #     - "3307:80"
+  #   networks:
+  #     - app-network
+
+  # auth-app:
+  #   build:
+  #     context: .././tweeter-authentication-service
+  #   container_name: auth-service-app
+  #   depends_on:
+  #     mysql:
+  #       condition: service_healthy
+  #     kafka:
+  #       condition: service_healthy
+  #   ports:
+  #     - "8081:8080"
+  #   networks:
+  #     - app-network
+
+  # tweet-app:
+  #   build:
+  #     context: .././tweeter-tweet-service
+  #   container_name: tweet-service-app
+  #   depends_on:
+  #     mysql:
+  #       condition: service_healthy
+  #     kafka:
+  #       condition: service_healthy
+  #   ports:
+  #     - "8082:8080"
+  #   networks:
+  #     - app-network
+
+  # hometimeline-app:
+  #   build:
+  #     context: .././tweeter-home-timeline-service
+  #   container_name: hometimeline-service-app
+  #   depends_on:
+  #     mysql:
+  #       condition: service_healthy
+  #     kafka:
+  #       condition: service_healthy
+  #   ports:
+  #     - "8083:8080"
+  #   networks:
+  #     - app-network
+
+  # usertimeline-app:
+  #   build:
+  #     context: .././tweeter-user-timeline-service
+  #   container_name: usertimeline-service-app
+  #   depends_on:
+  #     mysql:
+  #       condition: service_healthy
+  #     kafka:
+  #       condition: service_healthy
+  #   ports:
+  #     - "8084:8080"
+  #   networks:
+  #     - app-network
 
 networks:
   app-network:

@@ -23,6 +23,7 @@ public class Comment {
     private Long commentId;
 
     private Long userId;
+    private String userHandle;
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY) // Assuming many comments per tweet
@@ -81,5 +82,13 @@ public class Comment {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getUserHandle() {
+        return userHandle;
+    }
+
+    public void setUserHandle(String userHandle) {
+        this.userHandle = userHandle;
     }
 }

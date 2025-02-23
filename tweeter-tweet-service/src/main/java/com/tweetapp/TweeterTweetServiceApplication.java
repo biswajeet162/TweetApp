@@ -35,7 +35,7 @@ public class TweeterTweetServiceApplication {
 	private static final String COMMENT_TOPIC = "comment-topic";
 	private static final String LIKE_TOPIC = "like-topic";
 
-	@PostConstruct
+	//@PostConstruct
 	public void fun(){
 
 		for(long userId=1; userId<10; userId++){
