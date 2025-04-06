@@ -1,40 +1,29 @@
 package com.tweetapp.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import lombok.*;
 
+@Setter
+@Getter
 @Entity
-@Table(name = "users")  // Use a different table name
+@Table(name = "users")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Nullable
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
+    private String handle;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
+    private String password;
 }

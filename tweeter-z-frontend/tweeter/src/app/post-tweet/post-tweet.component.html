@@ -1,0 +1,15 @@
+<form (ngSubmit)="onSubmit()" #tweetForm="ngForm">
+  <div>
+    <label for="content">Content:</label>
+    <textarea id="content" name="content" [(ngModel)]="tweet.content" required></textarea>
+  </div>
+  <div>
+    <label for="images">Images:</label>
+    <input type="file" id="images" (change)="onFileChange($event, 'images')" multiple>
+  </div>
+  <div>
+    <label for="videos">Videos:</label>
+    <input type="file" id="videos" (change)="onFileChange($event, 'videos')" multiple>
+  </div>
+  <button type="submit">Post Tweet</button>
+</form>

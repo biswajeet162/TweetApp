@@ -118,3 +118,25 @@
   transform: scale(1.02); /* Slightly enlarge on hover */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
 }
+
+
+
+
+.add-comment-btn-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.add-comment-btn-container .action-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.add-comment-btn-container .action-btn:hover {
+  background-color: #0056b3;
+}

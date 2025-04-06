@@ -10,6 +10,7 @@ public class CommentDTO {
     private Long commentId;
     private Long tweetId;
     private Long userId;
+    private String userHandle;
     private String content;
     private Date createdAt;
     private Date updatedAt;
@@ -61,5 +62,13 @@ public class CommentDTO {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getUserHandle() {
+        return userHandle;
+    }
+
+    public void setUserHandle(String userHandle) {
+        this.userHandle = userHandle;
     }
 }

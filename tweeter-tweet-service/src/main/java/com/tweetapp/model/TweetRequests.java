@@ -12,20 +12,10 @@ public class TweetRequests {
 
     public Long userId;
     public String content;
+    public String userHandle;
+    private String userName;
 
-    public Long getUserId() {
-        return userId;
-    }
+    private String[] imageUrls;
+    private String[] videoUrls;
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 }

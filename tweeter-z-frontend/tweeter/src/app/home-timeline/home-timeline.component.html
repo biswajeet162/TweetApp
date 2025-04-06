@@ -6,9 +6,9 @@
         <img [src]="'https://i.pravatar.cc/50?img=' + tweet.userId" alt="User Avatar" />
       </div>
       <div class="user-details">
-        <p class="user-name">{{ tweet.userName }}</p>
+        <p class="user-name">{{ tweet?.userName }}</p>
         <p class="user-handle">{{ tweet.userHandle }}</p>
-        <!-- <p class="user-handle">{{ tweet.createdAt | date: 'short' }}</p> -->
+        <!-- <p class="user-handle">{{ tweet.createdAt | date: 'short' }}</p> --> 
       </div>
     </div>
     
@@ -16,12 +16,12 @@
     <p class="tweet-content">{{ tweet.content }}</p>
     
     <!-- Media Section -->
-    <div class="tweet-media" *ngIf="tweet.imageUrl.length || tweet.videoUrl.length">
+    <div class="tweet-media" *ngIf="tweet.imageUrls.length || tweet.videoUrls.length">
       <div class="media-images">
-        <img *ngFor="let image of tweet.imageUrl" [src]="image" alt="Tweet Image" />
+        <img *ngFor="let image of tweet.imageUrls" [src]="image" alt="Tweet Image" />
       </div>
       <div class="media-videos">
-        <video *ngFor="let video of tweet.videoUrl" [src]="video" controls></video>
+        <video *ngFor="let video of tweet.videoUrls" [src]="video" controls></video>
       </div>
     </div>
     
@@ -44,6 +44,15 @@
         </div>
         <p class="comment-content">{{ comment.content }}</p>
       </div>
+      <!-- Add Comment Button -->
+      <div class="add-comment-btn-container">
+        <button class="action-btn" (click)="addComment(tweet.tweetId)">
+          <i class="fa fa-plus"></i> Add Comment
+        </button>
+      </div>
     </div>
   </div>
 </div>
+
+<!-- Custom Dialog Component -->
+<app-add-comment-dialog *ngIf="showDialog" (commentAdded)="handleCommentAdded($event)" (dialogClosed)="handleDialogClosed()"></app-add-comment-dialog>

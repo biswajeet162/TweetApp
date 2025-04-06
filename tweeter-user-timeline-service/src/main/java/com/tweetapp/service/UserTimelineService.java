@@ -1,5 +1,6 @@
 package com.tweetapp.service;
 
+import com.tweetapp.custom_exceptions.TweetNotFound;
 import com.tweetapp.model.*;
 import com.tweetapp.repository.CommentRepository;
 import com.tweetapp.repository.LikeRepository;
@@ -30,8 +31,11 @@ public class UserTimelineService {
     public List<TweetDTO> getUserTweets(Long userId) throws Exception {
         List<Tweet> tweets = tweetRepository.findByUserId(userId);
 
-        if(tweets == null){
-            throw new Exception("Tweet NOT FOUND");
+        System.out.println("=======================================================\n\n\n\n");
+        System.out.println(tweets);
+
+        if(tweets == null || tweets.size() == 0){
+            throw new TweetNotFound("User Not Found");
         }
 
         // Map tweets to TweetDTOs with their comments and likes
@@ -65,6 +69,13 @@ public class UserTimelineService {
         TweetDTO tweetDTO = new TweetDTO();
         tweetDTO.setTweetId(tweet.getTweetId());
         tweetDTO.setUserId(tweet.getUserId());
+
+        tweetDTO.setUserHandle(tweet.getUserHandle());
+        tweetDTO.setUserName(tweet.getUserName());
+
+        tweetDTO.setImageUrls(tweet.getImageUrls());
+        tweetDTO.setVideoUrls(tweet.getVideoUrls());
+
         tweetDTO.setContent(tweet.getContent());
         tweetDTO.setCreatedAt(new Date());
         tweetDTO.setUpdatedAt(tweet.getUpdatedAt());
@@ -80,6 +91,8 @@ public class UserTimelineService {
         commentDTO.setCommentId(comment.getCommentId());
         commentDTO.setTweetId(comment.getTweet().getTweetId());
         commentDTO.setUserId(comment.getUserId());
+        commentDTO.setUserHandle(comment.getUserHandle());
+
         commentDTO.setContent(comment.getContent());
         commentDTO.setCreatedAt(comment.getCreatedAt());
         commentDTO.setUpdatedAt(comment.getUpdatedAt());

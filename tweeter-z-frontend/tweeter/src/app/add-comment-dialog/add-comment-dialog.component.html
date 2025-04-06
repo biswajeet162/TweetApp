@@ -1,0 +1,9 @@
+<div class="dialog-overlay" (click)="closeDialog()"></div>
+<div class="dialog-box">
+  <h2>Add Comment</h2>
+  <textarea [(ngModel)]="commentContent" placeholder="Enter your comment"></textarea>
+  <div class="dialog-actions">
+    <button (click)="closeDialog()">Cancel</button>
+    <button (click)="sendComment()">Send</button>
+  </div>
+</div>

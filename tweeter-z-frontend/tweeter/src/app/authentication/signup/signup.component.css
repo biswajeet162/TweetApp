@@ -1,0 +1,133 @@
+.tweeter-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  background: white;
+}
+
+.logo-container {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.logo-container i {
+  font-size: 2.5rem;
+  color: #1DA1F2;
+}
+
+h1 {
+  font-size: 31px;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  position: relative;
+}
+
+input {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #cfd9de;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+input:focus {
+  border-color: #1DA1F2;
+  outline: none;
+}
+
+.handle-input {
+  position: relative;
+}
+
+.at-symbol {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #536471;
+}
+
+.handle-input input {
+  padding-left: 2rem;
+}
+
+.error-input {
+  border-color: #ff4136;
+}
+
+.error {
+  color: #ff4136;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.handle-availability {
+  color: #ff4136;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.signup-button {
+  background-color: #1DA1F2;
+  color: white;
+  padding: 1rem;
+  border: none;
+  border-radius: 9999px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.signup-button:hover:not(:disabled) {
+  background-color: #1a91da;
+}
+
+.signup-button:disabled {
+  background-color: #87ceeb;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #ff4136;
+  text-align: center;
+  padding: 0.5rem;
+  background-color: #ffe5e5;
+  border-radius: 4px;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 1rem;
+  color: #536471;
+}
+
+.login-link a {
+  color: #1DA1F2;
+  text-decoration: none;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .tweeter-container {
+    margin: 0;
+    border-radius: 0;
+    padding: 1rem;
+  }
+}

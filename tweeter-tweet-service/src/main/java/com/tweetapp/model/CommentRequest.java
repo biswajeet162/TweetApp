@@ -1,28 +1,15 @@
 package com.tweetapp.model;
 
 
+import lombok.Data;
 import lombok.Getter;
 
 
-@Getter
+@Data
 public class CommentRequest {
 
     private Long userId;
+    private String userHandle;
     private String content;
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 }

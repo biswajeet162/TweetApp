@@ -29,35 +29,4 @@ public class TweetLikes {
     private Date createdAt;
 
 
-    public Long getLikeId() {
-        return likeId;
-    }
-
-    public void setLikeId(Long likeId) {
-        this.likeId = likeId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Tweet getTweet() {
-        return tweet;
-    }
-
-    public void setTweet(Tweet tweet) {
-        this.tweet = tweet;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
 }

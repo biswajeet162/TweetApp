@@ -1,5 +1,6 @@
 package com.tweetapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Nullable
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Like {
     @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,35 +30,4 @@ public class Like {
 
     private Date createdAt;
 
-    public Long getLikeId() {
-        return likeId;
-    }
-
-    public void setLikeId(Long likeId) {
-        this.likeId = likeId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Tweet getTweet() {
-        return tweet;
-    }
-
-    public void setTweet(Tweet tweet) {
-        this.tweet = tweet;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
 }

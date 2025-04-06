@@ -18,7 +18,7 @@ public class TweeterAuthenticationServiceApplication {
 	@Autowired
 	private UserRepository userRepository;
 
-	@PostConstruct
+//	@PostConstruct
 	public void addInitialUsers() {
 		User user1 = new User();
 		user1.setName("Alice");

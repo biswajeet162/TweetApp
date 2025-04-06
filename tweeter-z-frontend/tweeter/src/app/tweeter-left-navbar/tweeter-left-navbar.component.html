@@ -3,19 +3,17 @@
     <div class="user-info">
       <img class="user-profile-pic" src="https://i.pravatar.cc/50?img=1" alt="User Profile">
       <div class="user-details">
-        <span class="user-name">Alok Sharma</span>
-        <span class="user-handle">Alpha</span>
+        <span class="user-name">{{ userName }}</span>
+        <span class="user-handle">{{ userHandle }}</span>
       </div>
     </div>
   
     <!-- Navigation Links -->
     <ul class="nav-links">
-      <li><a href="#" class="nav-link home">Home</a></li>
-      <li><a href="#" class="nav-link notifications">Notifications</a></li>
-      <li><a href="/profile" class="nav-link profile">Profile</a></li>
-      <li><a href="#" class="nav-link logout">Post</a></li>
-      <li><a href="#" class="nav-link logout">Logout</a></li>
+      <li><a routerLink="/home-timeline" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link home-timeline">Home</a></li>
+      <li><a routerLink="/profile" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link profile">Profile</a></li>
+      <li><a routerLink="/post" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link post">Post</a></li>
+      <li><a routerLink="/notifications" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link notifications">Notifications</a></li>
+      <li><a (click)="logout()" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link logout">Logout</a></li>
     </ul>
-  
-  </div>
-  
+</div>

@@ -53,6 +53,7 @@ public class TweetController {
     }
 
     @PostMapping("/{tweetId}/like")
+
     public ResponseEntity<Void> likeTweet(@PathVariable Long tweetId, @RequestParam Long userId) {
         tweetService.likeTweet(tweetId, userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

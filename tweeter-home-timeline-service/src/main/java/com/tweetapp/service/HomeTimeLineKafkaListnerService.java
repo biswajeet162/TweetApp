@@ -32,7 +32,7 @@ public class HomeTimeLineKafkaListnerService {
         try{
             ObjectMapper objectMapper = new ObjectMapper();
             Tweet tweet1 = objectMapper.readValue(tweet, Tweet.class);
-//            System.out.println("\n\n\n\nDeserialized Tweet: " + tweet1);
+            System.out.println("\n\n\n\n  Deserialized Tweet: " + tweet1);
             tweetRepository.save(tweet1);
  }
         catch (Exception e){

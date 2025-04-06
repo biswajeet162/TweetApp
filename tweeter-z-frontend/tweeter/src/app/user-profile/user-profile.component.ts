@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-user-profile',
@@ -7,6 +7,19 @@ import { Component } from '@angular/core';
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.css'
 })
-export class UserProfileComponent {
+export class UserProfileComponent implements OnInit {
+
+  userName: string | undefined;
+  userHandle: string | undefined;
+
+  constructor() { }
+
+  ngOnInit(): void {
+    this.userName = localStorage.getItem('username') ?? "";
+    this.userHandle = localStorage.getItem('handle') ?? "";
+
+    console.log("=======================================");
+    console.log(this.userName, this.userHandle);
+  }
 
 }

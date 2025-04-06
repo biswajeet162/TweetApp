@@ -13,7 +13,6 @@ export class UserTimelineComponent {
     {
       tweetId: 1,
       userId: 1,
-     
       content: "Exploring the beautiful mountains! Nature is truly amazing. 🏞️✨",
       createdAt: "2025-01-14T14:29:07.712+00:00",
       updatedAt: "2025-01-14T14:29:07.712+00:00",

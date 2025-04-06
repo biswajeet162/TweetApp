@@ -39,7 +39,11 @@ public class TweetService {
     public Tweet createTweet(TweetRequests tweetRequest) {
         Tweet tweet = new Tweet();
         tweet.setUserId(tweetRequest.getUserId());
+        tweet.setUserHandle(tweetRequest.getUserHandle());
+        tweet.setUserName(tweetRequest.getUserName());
         tweet.setContent(tweetRequest.getContent());
+        tweet.setImageUrls(tweetRequest.getImageUrls());
+        tweet.setVideoUrls(tweetRequest.getVideoUrls());
         tweet.setCreatedAt(new Date());
         tweet.setUpdatedAt(new Date());
         Tweet savedTweet = tweetRepository.save(tweet);
@@ -53,12 +57,12 @@ public class TweetService {
     // Add comment to a tweet
     public Comment addComment(Long tweetId, CommentRequest commentRequest) {
 
-
         Tweet tweet = tweetRepository.findById(tweetId).orElseThrow(() -> new TweetNotFound("Tweet not found"));
 
         Comment comment = new Comment();
         comment.setTweet(tweet);
         comment.setUserId(commentRequest.getUserId());
+        comment.setUserHandle(commentRequest.getUserHandle());
         comment.setContent(commentRequest.getContent());
         comment.setCreatedAt(new Date());
         comment.setUpdatedAt(new Date());

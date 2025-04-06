@@ -32,7 +32,7 @@ public class UserTimeLineKafkaListnerService {
         try{
             ObjectMapper objectMapper = new ObjectMapper();
             Tweet tweet1 = objectMapper.readValue(tweet, Tweet.class);
-//            System.out.println("Tweet:----------> " + tweet1);
+            System.out.println("Tweet:----------> " + tweet1);
             tweetRepository.save(tweet1);
         }
         catch (Exception e){

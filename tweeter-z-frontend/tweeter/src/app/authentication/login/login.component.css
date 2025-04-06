@@ -1,0 +1,97 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #000000;
+}
+
+.login-box {
+  background-color: #000000;
+  padding: 32px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.twitter-icon {
+  width: 40px;
+  height: 40px;
+  fill: #1DA1F2;
+  margin-bottom: 20px;
+}
+
+h1 {
+  color: #ffffff;
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #333333;
+  border-radius: 4px;
+  background-color: #000000;
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.form-group input:focus {
+  border-color: #1DA1F2;
+  outline: none;
+}
+
+.form-group input.error {
+  border-color: #E0245E;
+}
+
+.login-button {
+  background-color: #1DA1F2;
+  color: white;
+  border: none;
+  border-radius: 9999px;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.login-button:disabled {
+  background-color: #1DA1F2;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.login-button:hover:not(:disabled) {
+  background-color: #1a91da;
+}
+
+.error-message {
+  color: #E0245E;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.signup-link {
+  margin-top: 24px;
+  color: #6E767D;
+}
+
+.signup-link a {
+  color: #1DA1F2;
+  text-decoration: none;
+  margin-left: 4px;
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
+}
